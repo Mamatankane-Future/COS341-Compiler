@@ -1,0 +1,10 @@
+main
+num V_a, text V_b,
+begin
+  V_a = add(V_a, 1);
+  if grt(V_a, 5) then
+    V_b = "Hello";
+  else
+    V_b = "Bye";
+  halt;
+end

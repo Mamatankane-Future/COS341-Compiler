@@ -1,0 +1,6 @@
+main
+num V_num1,
+begin
+  V_num1 = 10;
+  halt;
+end

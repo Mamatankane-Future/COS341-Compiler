@@ -1,0 +1,7 @@
+main
+num V_sqrtresult,
+begin
+  V_sqrtresult = sqrt(16);
+  print V_sqrtresult;
+  halt;
+end

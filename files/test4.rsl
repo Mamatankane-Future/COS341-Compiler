@@ -1,0 +1,10 @@
+main
+num V_result,
+begin
+  V_result = F_multiply(5, 2, 3);
+  if eq(V_result, 30) then
+    print V_result;
+  else
+    print "Error";
+  halt;
+end

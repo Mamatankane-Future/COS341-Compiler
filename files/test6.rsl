@@ -1,0 +1,10 @@
+num F_calculate(V_x, V_y, V_z)
+{
+  num V_sum, num V_diff, num V_prod,
+  begin
+    V_sum = add(V_x, V_y);
+    V_diff = sub(V_sum, V_z);
+    V_prod = mul(V_diff, V_z);
+    return V_prod;
+  end
+}

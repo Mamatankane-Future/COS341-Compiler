@@ -1,0 +1,11 @@
+main
+num V_a, text V_message,
+begin
+  V_a < input;
+  if grt(V_a, 0) then
+    V_message = "Positive";
+  else
+    V_message = "Negative";
+  print V_message;
+  halt;
+end

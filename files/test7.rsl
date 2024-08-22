@@ -1,0 +1,10 @@
+main
+num V_finalResult,
+begin
+  V_finalResult = F_subtract(F_multiply(2, 3, 4), 5, 1);
+  if grt(V_finalResult, 10) then
+    print "Success";
+  else
+    print "Fail";
+  halt;
+end

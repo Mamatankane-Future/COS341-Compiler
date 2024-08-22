@@ -1,0 +1,12 @@
+main
+num V_x, num V_y, text V_output,
+begin
+  V_x = 10;
+  V_y = 20;
+  if and(eq(V_x, 10), grt(V_y, 15)) then
+    V_output = "Bothconditionsmet";
+  else
+    V_output = "Conditionsnotmet";
+  print V_output;
+  halt;
+end

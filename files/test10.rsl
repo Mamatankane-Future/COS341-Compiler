@@ -1,0 +1,7 @@
+main
+num V_output,
+begin
+  V_output = F_add(F_multiply(2, 3, 4), F_subtract(10, 5, 1), 1);
+  print V_output;
+  halt;
+end

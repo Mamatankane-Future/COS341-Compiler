@@ -1,0 +1,13 @@
+num F_factorial(V_n, V_dummy1, V_dummy2)
+{
+  num V_result, num V_temp, num V_subN,
+  begin
+    if eq(V_n, 1) then
+      return 1;
+    else
+      V_subN = sub(V_n, 1);
+      V_temp = F_factorial(V_subN, 0, 0);
+      V_result = mul(V_n, V_temp);
+      return V_result;
+  end
+}
