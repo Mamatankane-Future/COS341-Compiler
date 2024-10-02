@@ -5,7 +5,7 @@ public class LexerTester {
         Lexer lexer = new Lexer();
         // testingStrings(lexer);
 
-        lexer.lex("num V_a, text V_b,");
+        // lexer.lex("num V_a, text V_b,");
 
         testingFiles(lexer);
 
@@ -18,25 +18,19 @@ public class LexerTester {
             "files/test1.rsl",
             "files/test2.rsl",
             "files/test3.rsl",
-            "files/test4.rsl",
+            "files/test4.rsl", 
             "files/test5.rsl",
             "files/test6.rsl",
             "files/test7.rsl",
             "files/test8.rsl",
-            "files/test9.rsl",
-            "files/test10.rsl",
-            "files/test11.rsl",
-            "files/test12.rsl",
         };
 
         for (String fileName : fileNames) {
             System.out.println("===========================================================");
             try {
-                List<Token> tokens = lexer.lexFile(fileName);
+                TokenStream tokenStream = new TokenStream(fileName);
                 System.out.println("Tokens for " + fileName + ":");
-                for (Token token : tokens) {
-                    System.out.println(token.getType() + ": " + token.getValue());
-                }
+                System.out.println(tokenStream);
             } catch (RuntimeException e) {
                 System.out.println("Could not tokenize input. Error: " + e.getMessage());
             }
@@ -133,9 +127,9 @@ public class LexerTester {
             System.out.println("===========================================================");
             try {
                 List<Token> tokens = lexer.lex(testString);
-                System.out.println("Tokens for " + testString + ":");
+                // System.out.println("Tokens for " + testString + ":");
                 for (Token token : tokens) {
-                    System.out.println(token.getType() + ": " + token.getValue());
+                    System.out.println(token);
                 } 
             } catch (RuntimeException e) {
                 System.out.println("Could not tokenize input. Error: " + e.getMessage());

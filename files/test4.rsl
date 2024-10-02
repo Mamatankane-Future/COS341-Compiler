@@ -1,10 +1,10 @@
 main
-num V_result,
+num V_finalresult,
 begin
-  V_result = F_multiply(5, 2, 3);
-  if eq(V_result, 30) then
-    print V_result;
+  V_finalresult = F_subtract(F_multiply(2, 3, 4), 5, 1);
+  if grt(V_finalresult, 10) then
+    print "Success";
   else
-    print "Error";
+    print "Fail";
   halt;
 end

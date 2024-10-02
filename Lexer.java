@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Lexer {
     private DFA dfa;
@@ -187,3 +188,305 @@ public class Lexer {
         return allTokens;
     }
 }
+
+class DFA {
+    private Node startNode;
+
+    private final String[] reservedWords = {
+            "main",
+            "num",
+            "text",
+            "if",
+            "else",
+            "begin",
+            "end",
+            "skip",
+            "halt",
+            "print",
+            "then",
+            "void",
+            "not",
+            "and",
+            "or",
+            "add",
+            "sub",
+            "mul",
+            "div",
+            "eq",
+            "grt",
+            "sqrt",
+            "input"
+        };
+
+    public DFA(Node startNode) {
+        this.startNode = startNode;
+    }
+
+    public Node getStartNode() {
+        return startNode;
+    }
+
+    public void setStartNode(Node startNode) {
+        this.startNode = startNode;
+    }
+
+    private boolean isReservedWord(String token) throws RuntimeException {
+        for (String reservedWord : reservedWords){
+            if (token.equals(reservedWord)){
+                return true;
+            }
+        }
+        throw new RuntimeException("Invalid reserved word: " + token);
+    }
+
+    public List<Token> lex(String input) throws RuntimeException {
+        Node currentNode = startNode;
+        List<Token> tokens = new ArrayList<>();
+        StringBuilder currentToken = new StringBuilder();
+        for (int i = 0; i < input.length() - 1; i++) {
+            char c = input.charAt(i);
+            char c1 = input.charAt(i + 1);
+            if (!currentNode.hasTransition(c)) {
+                String message = "Invalid character: " + c + " at position: " + i +", reading token" +currentToken.toString();
+                throw new RuntimeException(message);
+            } else {
+                currentNode = currentNode.getTransition(c);
+                currentToken.append(c);
+                Node nextNode = currentNode.getTransition(c1);
+
+                if (currentNode.getType() == Type.RESERVED_CHARACTER && currentNode.isFinalState()){
+                    Token token = new Token(currentNode.getType(), currentToken.toString());
+                    tokens.add(token);
+                    currentToken = new StringBuilder();
+                } else if (nextNode != null && nextNode.getType() == Type.RESERVED_CHARACTER){
+                    if ((currentNode.getType() == Type.RESERVED_WORD && isReservedWord(currentToken.toString())) || currentNode.getType() != Type.RESERVED_WORD){
+                        Token token = new Token(currentNode.getType(), currentToken.toString());
+                        tokens.add(token);
+                        currentToken = new StringBuilder();
+                    }
+                }
+        
+            }
+        }
+
+        char c = input.charAt(input.length() - 1);
+        if (!currentNode.hasTransition(c)) {
+            String message = "Invalid character: " + c + " at position: " + (input.length() - 1);
+            throw new RuntimeException(message);
+        } else {
+            currentNode = currentNode.getTransition(c);
+            currentToken.append(c);
+
+            if (currentNode.isFinalState()) {
+                if (currentNode.getType() == Type.RESERVED_CHARACTER && currentNode.isFinalState()){
+                    Token token = new Token(currentNode.getType(), currentToken.toString());
+                    tokens.add(token);
+                    currentToken = new StringBuilder();
+                } else if ((currentNode.getType() == Type.RESERVED_WORD && isReservedWord(currentToken.toString())) || currentNode.getType() != Type.RESERVED_WORD){
+                    Token token = new Token(currentNode.getType(), currentToken.toString());
+                    tokens.add(token);
+                    currentToken = new StringBuilder();
+                }
+            } else {
+                String message = "Invalid token: " + currentToken.toString();
+                throw new RuntimeException(message);
+            }
+        }
+
+        return tokens;
+    }
+
+    @Override
+    public String toString() {
+        return "DFA{" +
+                "startNode=" + startNode +
+                '}';
+    }
+}
+
+
+class Node {
+    private TransitionMap transitions;
+
+    private Type type = null;
+
+    public Node() {
+        this.type = null;
+        this.transitions = new TransitionMap();
+    }
+
+
+    public boolean isFinalState() {
+        return type != null;
+    }
+
+
+    public void addTransition(Character character, Node node) {
+        this.transitions.addTransition(character, node);
+    }
+
+    public Node getTransition(Character character) {
+        return this.transitions.getTransition(character);
+    }
+
+    public boolean hasTransition(Character character) {
+        return this.transitions.hasTransition(character);
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "transitions=" + transitions +
+                ", type=" + type +
+                '}';
+    }
+}
+
+class Token {
+    private String value;
+    private Type type;
+
+    public Token(){}
+
+    public Token(Type type, String value) {
+        this.type = type;
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        if (value.equals(" ")) {
+            return "";
+        }
+        if (type == Type.VARIABLE) {
+            return "V_ ";
+        }
+        if (type == Type.NUMBER) {
+            return "N_ ";
+        }
+        if (type == Type.FUNCTION) {
+            return "F_ ";
+        }
+        if (type == Type.STRING) {
+            return "S_ ";
+        }
+        return getValue().replace(" ", "") + " ";
+    }
+}
+
+final class Tuple {
+    public Node node;
+    public Character character;
+
+    public Tuple(Node node, Character character) {
+        this.node = node;
+        this.character = character;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Tuple tuple = (Tuple) obj;
+        return Objects.equals(node, tuple.node) && Objects.equals(character, tuple.character);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(node, character);
+    }
+}
+
+class TransitionMap {
+    private static final List<Tuple> cache = new ArrayList<>();
+    private List<Tuple> transitions = new ArrayList<>();
+
+    public void addTransition(Character character, Node node) {
+        Tuple existingTuple = findTupleInCache(character, node);
+        
+        if (existingTuple != null) {
+            transitions.add(existingTuple);
+        } else {
+            Tuple newTuple = new Tuple(node, character);
+            cache.add(newTuple);
+            transitions.add(newTuple);
+        }
+    }
+
+    private Tuple findTupleInCache(Character character, Node node) {
+        for (Tuple tuple : cache) {
+            if (tuple.character.equals(character) && tuple.node.equals(node)) {
+                return tuple;
+            }
+        }
+        return null;
+    }
+
+    public Node getTransition(Character character) {
+        for (Tuple tuple : transitions) {
+            if (tuple.character.equals(character)) {
+                return tuple.node;
+            }
+        }
+        return null;
+    }
+
+    public boolean hasTransition(Character character) {
+        for (Tuple tuple : transitions) {
+            if (tuple.character.equals(character)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+enum Type {
+    VARIABLE,
+    NUMBER,
+    FUNCTION,
+    STRING,
+    RESERVED_WORD,
+    RESERVED_CHARACTER,
+}
+
+class TokenStream{
+    private List<Token> tokens;
+
+    public TokenStream(String filename) {
+        Lexer lexer = new Lexer();
+        tokens = lexer.lexFile(filename);
+    }
+
+    public String getTokens(){
+        StringBuilder sb = new StringBuilder();
+        for (Token token : tokens){
+            sb.append(token);
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getTokens();
+    }
+}
+
+
+
