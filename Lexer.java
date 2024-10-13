@@ -2,9 +2,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 
 public class Lexer {
     private DFA dfa;
@@ -375,18 +377,18 @@ class Token {
             return "";
         }
         if (type == Type.VARIABLE) {
-            return "V_ ";
+            return "V_";
         }
         if (type == Type.NUMBER) {
-            return "N_ ";
+            return "N_";
         }
         if (type == Type.FUNCTION) {
-            return "F_ ";
+            return "F_";
         }
         if (type == Type.STRING) {
-            return "S_ ";
+            return "S_";
         }
-        return getValue().replace(" ", "") + " ";
+        return getValue().replace(" ", "");
     }
 }
 
@@ -464,6 +466,7 @@ enum Type {
     STRING,
     RESERVED_WORD,
     RESERVED_CHARACTER,
+    DOLLAR
 }
 
 class TokenStream{
@@ -472,20 +475,22 @@ class TokenStream{
     public TokenStream(String filename) {
         Lexer lexer = new Lexer();
         tokens = lexer.lexFile(filename);
-    }
-
-    public String getTokens(){
-        StringBuilder sb = new StringBuilder();
-        for (Token token : tokens){
-            sb.append(token);
+        List<Token> filteredTokens = new ArrayList<>();
+        for (Token token : tokens) {
+            String temp = token.getValue().replace(" ", "");
+            if (!temp.equals("")) {
+                filteredTokens.add(token);
+            }
         }
-        return sb.toString();
+
+        this.tokens = filteredTokens;
     }
 
-    @Override
-    public String toString() {
-        return getTokens();
+    public List<Token> getTokens() {
+        return tokens;
     }
+
+
 }
 
 

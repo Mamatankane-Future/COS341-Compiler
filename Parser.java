@@ -1,55 +1,184 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.List;
 import java.util.ArrayList;
 
 class XMLTree {
     String tag;
-    String content;
+    Integer id;
+    Integer parent;
     List<XMLTree> children;
+    List<Integer> childrenIDs;
 
-    public XMLTree(String tag, String content) {
+    public XMLTree(String tag, Integer id) {
         this.tag = tag;
-        this.content = content;
+        this.id = id;
         this.children = new ArrayList<>();
+        this.childrenIDs = new ArrayList<>();
+        parent = null;
     }
 
     public void addChild(XMLTree child) {
-        this.children.add(child);
+        this.children.addFirst(child);
+        this.childrenIDs.addFirst(child.id);
+        child.addParent(this.id);
+    }
+
+    public void addParent(Integer parent) {
+        this.parent = parent;
     }
 
     public String toString() {
-        String ret = "<" + this.tag + ">";
-        if (this.content != null) {
-            ret += this.content;
-        }
-        for (XMLTree child : this.children) {
-            ret += child.toString();
-        }
-        ret += "</" + this.tag + ">";
-        return ret;
+        return toString(0);
     }
+    
+    private String toString(int indentLevel) {
+        StringBuilder ret = new StringBuilder();
+        
+        // Indent the opening tag
+        ret.append("\n");
+        ret.append(" ".repeat(indentLevel));
+        ret.append("<").append(this.tag).append(">");
+    
+    
+        // Recursively add children with incremented indentation level
+        for (XMLTree child : this.children) {
+            ret.append(child.toString(indentLevel + 1));
+        }
+    
+        // Indent the closing tag
+        if (!this.children.isEmpty()) {
+            ret.append("\n");
+            ret.append(" ".repeat(indentLevel));
+        } 
+        ret.append("</").append(this.tag).append(">");
+    
+        return ret.toString();
+    }
+
+    
+
+    public String toSyntaxTreeString(XMLTree node) {
+        StringBuilder root = new StringBuilder();
+        StringBuilder innerNodes = new StringBuilder();
+        StringBuilder leafs = new StringBuilder();
+        
+        Queue<XMLTree> queue = new LinkedList<>();
+        queue.add(node);
+        
+
+        while (!queue.isEmpty()) {
+            XMLTree currentNode = queue.poll();
+    
+            if (currentNode.parent == null) {
+                root.append("  <ROOT>\n");
+                root.append("    <UNID>").append(currentNode.id).append("</UNID>\n");
+                root.append("    <SYMB>").append(currentNode.tag).append("</SYMB>\n");
+                root.append("    <CHILDREN>\n");
+                
+                // Adding child IDs
+                for (Integer childID : currentNode.childrenIDs) {
+                    root.append("      <ID>").append(childID).append("</ID>\n");
+                }
+                
+                root.append("    </CHILDREN>\n");
+                root.append("  </ROOT>\n");
+            }
+
+            else if (!currentNode.children.isEmpty()) {
+                innerNodes.append("    <IN>\n");
+                innerNodes.append("      <PARENT>").append(currentNode.id).append("</PARENT>\n");
+                innerNodes.append("      <UNID>").append(currentNode.parent).append("</UNID>\n");
+                innerNodes.append("      <SYMB>").append(currentNode.tag).append("</SYMB>\n");
+                innerNodes.append("      <CHILDREN>\n");
+
+                // Adding child IDs for inner node
+                for (Integer childID : currentNode.childrenIDs) {
+                    innerNodes.append("        <ID>").append(childID).append("</ID>\n");
+                }
+
+                innerNodes.append("      </CHILDREN>\n");
+                innerNodes.append("    </IN>\n");
+            }
+
+            // Leaf nodes processing
+            else if (currentNode.children.isEmpty()) {
+                leafs.append("    <LEAF>\n");
+                leafs.append("      <PARENT>").append(currentNode.parent).append("</PARENT>\n");
+                leafs.append("      <UNID>").append(currentNode.id).append("</UNID>\n");
+                leafs.append("      <TERMINAL>\n");
+                leafs.append("        <TOKEN>").append(currentNode.tag).append("</TOKEN>\n");
+                leafs.append("      </TERMINAL>\n");
+                leafs.append("    </LEAF>\n");
+            }
+
+            // Add all children of current node to the queue for further processing
+            for (XMLTree child : currentNode.children) {
+                queue.add(child);
+            }
+
+        }
+
+        // Combine root, inner nodes, and leaf nodes into the final XML structure
+        StringBuilder finalXML = new StringBuilder();
+        finalXML.append("<SYNTREE>\n");
+        finalXML.append(root);
+        finalXML.append("  <INNERNODES>\n");
+        finalXML.append(innerNodes);
+        finalXML.append("  </INNERNODES>\n");
+        finalXML.append("  <LEAFNODES>\n");
+        finalXML.append(leafs);
+        finalXML.append("  </LEAFNODES>\n");
+        finalXML.append("</SYNTREE>\n");
+
+        return finalXML.toString();
+    }
+ 
+    
 }
 
 public class Parser{
 
-    public XMLTree parse(String input){
+    public void parse(String filename){
+        TokenStream tokenStream = new TokenStream(filename);
+        List<Token> tokens = tokenStream.getTokens();
+
+        XMLTree xmlTree = parse(tokens);
+        String temp = xmlTree.toSyntaxTreeString(xmlTree);
+
+        try {
+            writeToFile("output.xml", temp);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void writeToFile(String fileName, String content) throws IOException {
+        Files.write(Paths.get(fileName), content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        System.out.println("XML written to " + fileName);
+    }
+
+    public XMLTree parse(List<Token> tokens) {
         DeserializeParser deserializeParser = new DeserializeParser();
         Map<String, String> parseMap = deserializeParser.parseInputFile();
 
-        Stack<XMLTree> xmlTrees = new Stack<>();
+        AtomicInteger currentUNID = new AtomicInteger(1);
+
+        List<XMLTree> xmlTrees = new ArrayList<>();
 
         GrammarRules grammarRules = new GrammarRules();
 
-        input = input + " $";
-
-        Stack<String> tokens = new Stack<>();
-        String[] tokenArray = input.split("\\s+"); 
-        for (int i = tokenArray.length - 1; i >= 0; i--) {
-            tokens.push(tokenArray[i]);
-        }
+        tokens.add(new Token(Type.DOLLAR, "$"));
 
         Stack<String> stack = new Stack<>();
 
@@ -57,13 +186,13 @@ public class Parser{
 
         while (true) {
             String top = stack.peek();
-            String token = tokens.peek();
+            Token token = tokens.get(0);
 
-            if (top.equals("$") && token.equals("$")) {
+            if (top.equals("$") && token.getType() == Type.DOLLAR) {
                 break;
             }
 
-            String key = top + "_" + token;
+            String key = top + "_" + token.toString();
 
             if (!parseMap.containsKey(key)) {
                 throw new RuntimeException("No entry in parse table for key: " + key);
@@ -74,19 +203,16 @@ public class Parser{
             if (value.equals("acc")) {
                 break;
             } else if (value.charAt(0) == 's') {
-                stack.push(token);
+                stack.push(token.getValue());
                 stack.push(value.substring(1));
-                tokens.pop();
+                xmlTrees.add(new XMLTree(token.getValue(), currentUNID.getAndIncrement()));
+                tokens.remove(0);
+                
             } else if (value.charAt(0) == 'r') {
                 int ruleIndex = Integer.parseInt(value.substring(1));
                 GrammarRule rule = grammarRules.grammarRules.get(ruleIndex);
 
-
                 for (int i = 0; i < 2 * rule.rhs.length; i++) {
-                    if (i % 2 != 0){
-                        String poppedString = stack.peek();
-                        xmlTrees.add(new XMLTree(poppedString, ""));
-                    }
                     stack.pop();
                 }
 
@@ -102,16 +228,19 @@ public class Parser{
                 stack.push(lhs);
                 stack.push(newStateValue.substring(1));
 
-                XMLTree leaf = new XMLTree(lhs, "");
-                while (!xmlTrees.isEmpty()){
-                    leaf.addChild(xmlTrees.pop());
+                XMLTree xmlTree = new XMLTree(lhs, currentUNID.getAndIncrement());
+
+                for (int i = 0; i < rule.rhs.length; i++) {
+                    XMLTree child = xmlTrees.remove(xmlTrees.size() - 1);
+                    xmlTree.addChild(child);
                 }
-                xmlTrees.push(leaf);
+
+                xmlTrees.add(xmlTree);
 
             } else if (value.charAt(0) == 'g') {
-                stack.push(token);
+                stack.push(token.getValue());
                 stack.push(value.substring(1));
-                tokens.pop();
+                tokens.remove(0);
             } else {
                 throw new RuntimeException("Invalid value in parse table: " + value);
             }
@@ -119,7 +248,10 @@ public class Parser{
         
         }
 
-        return xmlTrees.pop();
+        XMLTree root = new XMLTree("S", currentUNID.getAndIncrement());
+        root.addChild(xmlTrees.get(0));
+
+        return root;
 
     }
 
@@ -177,6 +309,7 @@ class GrammarRules{
         grammarRules.add(new GrammarRule("COMMAND", new String[]{"skip"}));
         grammarRules.add(new GrammarRule("COMMAND", new String[]{"halt"}));
         grammarRules.add(new GrammarRule("COMMAND", new String[]{"print", "ATOMIC"}));
+        grammarRules.add(new GrammarRule("COMMAND", new String[]{"return", "ATOMIC"}));
         grammarRules.add(new GrammarRule("COMMAND", new String[]{"ASSIGN"}));
         grammarRules.add(new GrammarRule("COMMAND", new String[]{"CALL"}));
         grammarRules.add(new GrammarRule("COMMAND", new String[]{"BRANCH"}));
@@ -187,7 +320,7 @@ class GrammarRules{
         grammarRules.add(new GrammarRule("CONST", new String[]{"N_"}));
         grammarRules.add(new GrammarRule("CONST", new String[]{"S_"}));
 
-        grammarRules.add(new GrammarRule("ASSIGN", new String[]{"VNAME", "<", "input"}));
+        grammarRules.add(new GrammarRule("ASSIGN", new String[]{"VNAME", "<input"}));
         grammarRules.add(new GrammarRule("ASSIGN", new String[]{"VNAME", "=", "TERM"}));
 
         grammarRules.add(new GrammarRule("CALL", new String[]{"FNAME", "(", "ATOMIC", ",", "ATOMIC", ",", "ATOMIC", ")"}));
@@ -207,10 +340,9 @@ class GrammarRules{
         grammarRules.add(new GrammarRule("COND", new String[]{"SIMPLE"}));
         grammarRules.add(new GrammarRule("COND", new String[]{"COMPOSIT"}));
 
-        grammarRules.add(new GrammarRule("SIMPLE", new String[]{"ATOMIC"}));
-        grammarRules.add(new GrammarRule("SIMPLE", new String[]{"OP"}));
+        grammarRules.add(new GrammarRule("SIMPLE", new String[]{"BINOP", "(", "ATOMIC", ",", "ATOMIC", ")"}));
 
-        grammarRules.add(new GrammarRule("COMPOSIT", new String[]{"BINOP", "(", "ATOMIC", ",", "ATOMIC", ")"}));
+        grammarRules.add(new GrammarRule("COMPOSIT", new String[]{"BINOP", "(", "SIMPLE", ",", "SIMPLE", ")"}));
         grammarRules.add(new GrammarRule("COMPOSIT", new String[]{"UNOP", "(", "SIMPLE", ")"}));
 
         grammarRules.add(new GrammarRule("UNOP", new String[]{"not"}));

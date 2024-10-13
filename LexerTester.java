@@ -28,9 +28,6 @@ public class LexerTester {
         for (String fileName : fileNames) {
             System.out.println("===========================================================");
             try {
-                TokenStream tokenStream = new TokenStream(fileName);
-                System.out.println("Tokens for " + fileName + ":");
-                System.out.println(tokenStream);
             } catch (RuntimeException e) {
                 System.out.println("Could not tokenize input. Error: " + e.getMessage());
             }
