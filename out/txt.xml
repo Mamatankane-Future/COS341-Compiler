@@ -1,0 +1,17 @@
+<TOKENSTREAM>
+  <TOK>
+    <ID>1</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>main</WORD>
+  </TOK>
+  <TOK>
+    <ID>2</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>begin</WORD>
+  </TOK>
+  <TOK>
+    <ID>3</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>end</WORD>
+  </TOK>
+</TOKENSTREAM>

@@ -1,6 +1,1 @@
-main
-begin
-  skip;
-  print "Skipped";
-  halt;
-end
+main begin print V_g4392499 ; end
