@@ -2,11 +2,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
 
 public class Lexer {
     private DFA dfa;
@@ -23,7 +21,7 @@ public class Lexer {
         }
 
 
-        String specialChars = "{}(),;<= ";
+        String specialChars = "{}(),;=< ";
         for (char c : specialChars.toCharArray()) {
             nodes[0].addTransition(c, nodes[0]);
         }
@@ -205,6 +203,7 @@ class DFA {
             "skip",
             "halt",
             "print",
+            "return",
             "then",
             "void",
             "not",
@@ -476,10 +475,21 @@ class TokenStream{
         Lexer lexer = new Lexer();
         tokens = lexer.lexFile(filename);
         List<Token> filteredTokens = new ArrayList<>();
-        for (Token token : tokens) {
-            String temp = token.getValue().replace(" ", "");
+        for (int i = 0; i < tokens.size(); i++) {
+            String temp = tokens.get(i).getValue().replace(" ", "");
             if (!temp.equals("")) {
-                filteredTokens.add(token);
+                if (temp.equals("<")){
+                    filteredTokens.add(new Token(Type.RESERVED_WORD, "<input"));
+                    String next = tokens.get(i + 1).getValue().replace(" ", "");
+                    while(next.isEmpty()) {
+                        i++;
+                        next = tokens.get(i + 1).getValue().replace(" ", "");
+                    }
+
+                    if (!next.equals("input")) throw new RuntimeException("Invalid follow up word for <");
+                    i++;
+                }
+                else filteredTokens.add(tokens.get(i));
             }
         }
 
@@ -488,17 +498,17 @@ class TokenStream{
         sb.append("<TOKENSTREAM>\n");
         Integer i = 1;
         for (Token token : tokens) {
-            sb.append("<TOK>\n");
-            sb.append("<ID>" + i + "</ID>\n");
-            sb.append("<CLASS>" + token.getType() + "</CLASS>\n");
-            sb.append("<WORD>" + token.getValue() + "</WORD>\n");
-            sb.append("</TOK>\n");
+            sb.append("  <TOK>\n");
+            sb.append("    <ID>" + i + "</ID>\n");
+            sb.append("    <CLASS>" + token.getType() + "</CLASS>\n");
+            sb.append("    <WORD>" + token.getValue() + "</WORD>\n");
+            sb.append("  </TOK>\n");
             i++;
         }
         sb.append("</TOKENSTREAM>");
         try {
-            String [] parts = filename.split("/");
-            Files.write(Paths.get("out/" + parts[1] + ".xml"), sb.toString().getBytes());
+            String [] parts = filename.split("/")[1].split("\\.");
+            Files.write(Paths.get("out/" + parts[0] + ".xml"), sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
