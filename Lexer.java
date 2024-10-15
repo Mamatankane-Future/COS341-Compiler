@@ -484,11 +484,40 @@ class TokenStream{
         }
 
         this.tokens = filteredTokens;
+        StringBuilder sb = new StringBuilder();
+        sb.append("<TOKENSTREAM>\n");
+        Integer i = 1;
+        for (Token token : tokens) {
+            sb.append("<TOK>\n");
+            sb.append("<ID>" + i + "</ID>\n");
+            sb.append("<CLASS>" + token.getType() + "</CLASS>\n");
+            sb.append("<WORD>" + token.getValue() + "</WORD>\n");
+            sb.append("</TOK>\n");
+            i++;
+        }
+        sb.append("</TOKENSTREAM>");
+        try {
+            String [] parts = filename.split("/");
+            Files.write(Paths.get("out/" + parts[1] + ".xml"), sb.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public List<Token> getTokens() {
         return tokens;
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Token token : tokens) {
+            sb.append(token.toString()).append(" ");
+        }
+
+        return sb.toString();
+    }
+
 
 
 }
