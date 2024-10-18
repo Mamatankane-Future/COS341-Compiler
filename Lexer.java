@@ -354,6 +354,7 @@ class Node {
 class Token {
     private String value;
     private Type type;
+    private Integer id;
 
     public Token(){}
 
@@ -362,12 +363,26 @@ class Token {
         this.value = value;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Token(Type type, String value, Integer id) {
+        this.type = type;
+        this.value = value;
+        this.id = id;
+    }
+
     public String getValue() {
         return value;
     }
 
     public Type getType() {
         return type;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override
@@ -465,7 +480,8 @@ enum Type {
     STRING,
     RESERVED_WORD,
     RESERVED_CHARACTER,
-    DOLLAR
+    DOLLAR,
+    TERMINATOR
 }
 
 class TokenStream{
@@ -498,6 +514,7 @@ class TokenStream{
         sb.append("<TOKENSTREAM>\n");
         Integer i = 1;
         for (Token token : tokens) {
+            token.setId(i);
             sb.append("  <TOK>\n");
             sb.append("    <ID>" + i + "</ID>\n");
             sb.append("    <CLASS>" + token.getType() + "</CLASS>\n");
@@ -505,10 +522,15 @@ class TokenStream{
             sb.append("  </TOK>\n");
             i++;
         }
+        sb.append("  <TOK>\n");
+        sb.append("    <ID>" + i + "</ID>\n");
+        sb.append("    <CLASS>TERMINATOR</CLASS>\n");
+        sb.append("    <WORD>$</WORD>\n");
+        sb.append("  </TOK>\n");
         sb.append("</TOKENSTREAM>");
         try {
             String [] parts = filename.split("/")[1].split("\\.");
-            Files.write(Paths.get("out/" + parts[0] + ".xml"), sb.toString().getBytes());
+            Files.write(Paths.get("lexer/" + parts[0] + ".xml"), sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

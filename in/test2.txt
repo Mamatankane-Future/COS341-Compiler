@@ -1,1 +1,6 @@
-main begin end 
+main
+    text V_name,
+    num V_age,
+
+    begin
+    end

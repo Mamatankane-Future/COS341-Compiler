@@ -6,10 +6,13 @@ public class ProgramGenerator {
     private static Random random = new Random();
 
     public static void main(String[] args) {
-        for (int i = 3; i < 10; i++) {
-            String generatedProgram = generateProgram();
-            saveToFile(generatedProgram, "in/test" + i + ".txt");
-        }
+        // for (int i = 3; i < 10; i++) {
+        //     String generatedProgram = generateProgram();
+        //     saveToFile(generatedProgram, "in/test" + i + ".txt");
+        // }
+
+        String generatedProgram = generateProgram();
+        saveToFile(generatedProgram, "in/test" + 1 + ".txt");
         System.out.println("Program generated and saved to in/test1.txt");
     }
 
@@ -17,8 +20,12 @@ public class ProgramGenerator {
         return "main " + generateGlobalVars() + generateAlgo() + generateFunctions();
     }
 
+    private static Boolean nextBoolean() {
+        return random.nextDouble() < 0.4;
+    }
+
     private static String generateGlobalVars() {
-        if (random.nextBoolean()) {
+        if (nextBoolean()) {
             return ""; // Empty global vars
         } else {
             return generateVtyp() + " " + generateVname() + " , " + generateGlobalVars();
@@ -27,7 +34,7 @@ public class ProgramGenerator {
 
     // Generate variable type (num or text)
     private static String generateVtyp() {
-        return random.nextBoolean() ? "num" : "text";
+        return nextBoolean() ? "num" : "text";
     }
 
     // Generate a variable name like V_a1, V_apple, V_b9834
@@ -48,7 +55,7 @@ public class ProgramGenerator {
     
         // Remaining characters can be either a letter (a-z) or a digit (0-9)
         for (int i = 1; i < wordLength; i++) {
-            if (random.nextBoolean()) {
+            if (nextBoolean()) {
                 // Add a random letter (a-z)
                 char randomChar = (char) (random.nextInt(26) + 'a');
                 word.append(randomChar);
@@ -70,7 +77,7 @@ public class ProgramGenerator {
 
     // Generate instructions (COMMAND ; INSTRUC)
     private static String generateInstruc() {
-        if (random.nextBoolean()) {
+        if (nextBoolean()) {
             return ""; // Empty instructions
         } else {
             return generateCommand() + " ; " + generateInstruc();
@@ -99,19 +106,19 @@ public class ProgramGenerator {
 
     // Generate atomic values (variable name or constant)
     private static String generateAtomic() {
-        return random.nextBoolean() ? generateVname() : generateConst();
+        return nextBoolean() ? generateVname() : generateConst();
     }
 
     private static String generateConst() {
-        return random.nextBoolean() ? generateNum() : generateString();
+        return nextBoolean() ? generateNum() : generateString();
     }
 
     private static String generateNum() {
-        return random.nextBoolean() ? generateInteger().toString() : generateDouble().toString();
+        return nextBoolean() ? generateInteger().toString() : generateDouble().toString();
     }
 
     private static Double generateDouble() {
-        return random.nextDouble() * 100000000;
+        return random.nextDouble() * 1000000;
     }
     
 
@@ -140,7 +147,7 @@ public class ProgramGenerator {
 
     // Generate assignment (VNAME <input or VNAME = TERM)
     private static String generateAssign() {
-        if (random.nextBoolean()) {
+        if (nextBoolean()) {
             return generateVname() + " <input";
         } else {
             return generateVname() + " = " + generateTerm();
@@ -159,7 +166,7 @@ public class ProgramGenerator {
 
     // Generate condition (SIMPLE or COMPOSIT)
     private static String generateCond() {
-        return random.nextBoolean() ? generateSimple() : generateComposit();
+        return nextBoolean() ? generateSimple() : generateComposit();
     }
 
     // Generate simple condition (BINOP(ATOMIC, ATOMIC))
@@ -169,7 +176,7 @@ public class ProgramGenerator {
 
     // Generate composit condition (BINOP(SIMPLE, SIMPLE) or UNOP(SIMPLE))
     private static String generateComposit() {
-        if (random.nextBoolean()) {
+        if (nextBoolean()) {
             return generateBinop() + "(" + generateSimple() + " , " + generateSimple() + ")";
         } else {
             return generateUnop() + "(" + generateSimple() + ")";
@@ -190,7 +197,7 @@ public class ProgramGenerator {
 
     // Generate operation (UNOP(ARG) or BINOP(ARG, ARG))
     private static String generateOp() {
-        if (random.nextBoolean()) {
+        if (nextBoolean()) {
             return generateUnop() + "(" + generateArg() + ")";
         } else {
             return generateBinop() + "(" + generateArg() + " , " + generateArg() + ")";
@@ -199,12 +206,12 @@ public class ProgramGenerator {
 
     // Generate argument (ATOMIC or OP)
     private static String generateArg() {
-        return random.nextBoolean() ? generateAtomic() : generateOp();
+        return nextBoolean() ? generateAtomic() : generateOp();
     }
 
     // Generate unary operator (not, sqrt)
     private static String generateUnop() {
-        return random.nextBoolean() ? "not" : "sqrt";
+        return nextBoolean() ? "not" : "sqrt";
     }
 
     // Generate binary operator (or, and, eq, grt, add, sub, mul, div)
@@ -223,7 +230,7 @@ public class ProgramGenerator {
 
     // Generate functions (can be empty or a function declaration followed by others)
     private static String generateFunctions() {
-        if (random.nextBoolean()) {
+        if (nextBoolean()) {
             return ""; // Empty functions
         } else {
             return generateDecl() + generateFunctions();
@@ -242,7 +249,7 @@ public class ProgramGenerator {
 
     // Generate function type (num or void)
     private static String generateFtyp() {
-        return random.nextBoolean() ? "num" : "void";
+        return nextBoolean() ? "num" : "void";
     }
 
     // Generate function body (PROLOG LOCVARS ALGO EPILOG SUBFUNCS end)
@@ -252,7 +259,7 @@ public class ProgramGenerator {
 
     // Generate local variables (VTYP VNAME, VTYP VNAME, VTYP VNAME)
     private static String generateLocvars() {
-        return generateVtyp() + " " + generateVname() + " , " + generateVtyp() + " " + generateVname() + " , " + generateVtyp() + " " + generateVname();
+        return generateVtyp() + " " + generateVname() + " , " + generateVtyp() + " " + generateVname() + " , " + generateVtyp() + " " + generateVname() + " , ";
     }
 
     // Generate sub-functions (can be empty or more functions)

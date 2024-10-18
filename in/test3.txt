@@ -1,1 +1,59 @@
-main begin V_d7247fu9482 <input ; end
+main
+    text V_name,
+    num V_age,
+
+    begin
+        print 2025;
+        print V_age;
+        V_age = sub(2024,2003);
+        V_name < input;
+        F_print(V_name, V_age, 2);
+        V_age = F_print3(V_name, V_age, 2);
+    end
+
+    void F_print(V_arg1, V_arg2, V_arg3)
+    {
+        text V_name2,
+        num V_age2,
+        num V_many,
+        
+        begin
+            V_age = V_arg1;
+            V_name = V_arg2;
+            V_many = V_arg3;
+            F_print3(V_name2, V_age2, 2);
+        end
+    }
+
+        void F_print3(V_arg1, V_arg2, V_arg3)
+        {
+            text V_loc1,
+            num V_loc2,
+            num V_loc3,
+            
+            begin
+                if eq(V_arg3, 0) then begin end
+                else
+                    begin
+                        V_loc1 = sub(V_arg3, 1);
+                        F_print3(V_arg1, V_arg2, V_loc1);
+                    end;
+            end
+        }
+
+        end
+
+    end
+
+    num F_print3(V_arg1, V_arg2, V_arg3)
+    {
+        text V_name2,
+        num V_age2,
+        num V_many,
+        
+        begin
+            return V_arg2;
+        end
+    }
+
+    end
