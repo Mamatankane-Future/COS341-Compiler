@@ -15,7 +15,7 @@ main
 
     void F_print(V_arg1, V_arg2, V_arg3)
     {
-        text V_name2,
+        num V_name,
         num V_age2,
         num V_many,
         
@@ -37,8 +37,8 @@ main
                 if eq(V_arg3, 0) then begin end
                 else
                     begin
-                        V_loc1 = sub(V_arg3, 1);
-                        F_print3(V_arg1, V_arg2, V_loc1);
+                        V_loc2 = sub(V_arg3, 1);
+                        F_print3(V_arg1, V_arg2, V_loc2);
                     end;
             end
         }

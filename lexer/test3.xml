@@ -322,12 +322,12 @@
   <TOK>
     <ID>65</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>text</WORD>
+    <WORD>num</WORD>
   </TOK>
   <TOK>
     <ID>66</ID>
     <CLASS>VARIABLE</CLASS>
-    <WORD>V_name2</WORD>
+    <WORD>V_name</WORD>
   </TOK>
   <TOK>
     <ID>67</ID>
@@ -647,7 +647,7 @@
   <TOK>
     <ID>130</ID>
     <CLASS>VARIABLE</CLASS>
-    <WORD>V_loc1</WORD>
+    <WORD>V_loc2</WORD>
   </TOK>
   <TOK>
     <ID>131</ID>
@@ -722,7 +722,7 @@
   <TOK>
     <ID>145</ID>
     <CLASS>VARIABLE</CLASS>
-    <WORD>V_loc1</WORD>
+    <WORD>V_loc2</WORD>
   </TOK>
   <TOK>
     <ID>146</ID>

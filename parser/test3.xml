@@ -2071,14 +2071,14 @@
       <PARENT>140</PARENT>
       <UNID>139</UNID>
       <TERMINAL>
-        <TOKEN>text</TOKEN>
+        <TOKEN>num</TOKEN>
       </TERMINAL>
     </LEAF>
     <LEAF>
       <PARENT>142</PARENT>
       <UNID>141</UNID>
       <TERMINAL>
-        <TOKEN>V_name2</TOKEN>
+        <TOKEN>V_name</TOKEN>
       </TERMINAL>
     </LEAF>
     <LEAF>
@@ -2995,7 +2995,7 @@
       <PARENT>269</PARENT>
       <UNID>268</UNID>
       <TERMINAL>
-        <TOKEN>V_loc1</TOKEN>
+        <TOKEN>V_loc2</TOKEN>
       </TERMINAL>
     </LEAF>
     <LEAF>
@@ -3079,7 +3079,7 @@
       <PARENT>301</PARENT>
       <UNID>300</UNID>
       <TERMINAL>
-        <TOKEN>V_loc1</TOKEN>
+        <TOKEN>V_loc2</TOKEN>
       </TERMINAL>
     </LEAF>
     <LEAF>

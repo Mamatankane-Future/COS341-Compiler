@@ -158,17 +158,26 @@ public class TypeChecker{
                 if (type2.equals("t") || type2.equals("n")) {
                     return true;
                 }
+                else 
+                    throw new RuntimeException("Type Error");
+                    // return false;
             }
 
             return true;
         }
 
         if (type[0] != null) {
-            return type[0];
+            if (type[0]) return true;
+            else 
+                throw new RuntimeException("Type Error");
+                // return false;
         }
 
         if (arg[0] != null) {
-            return arg[0].equals("n");
+            if (arg[0].equals("v")) return true;
+            else 
+                throw new RuntimeException("Type Error");
+                // return false;
         }
 
         throw new RuntimeException("Type Error");
@@ -193,7 +202,10 @@ public class TypeChecker{
 
         boolean algo2Type = handleAlgos(temp);
 
-        return condType.equals("b") && algoType && algo2Type;
+        if (condType.equals("b") && algoType && algo2Type) return true;
+        else 
+            throw new RuntimeException("Type Error");
+            // return false;
 
     }
 
@@ -413,8 +425,10 @@ public class TypeChecker{
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
+        type = table.getType(name);
+        type = typeOf(type);
 
-        if (!name.equals("n")) {
+        if (!type.equals("n")) {
             throw new RuntimeException("Type Error");
             // return false;
         }
@@ -422,8 +436,10 @@ public class TypeChecker{
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
+        type = table.getType(name);
+        type = typeOf(type);
 
-        if (!name.equals("n")){
+        if (!type.equals("n")){
             throw new RuntimeException("Type Error");
             // return false;
         } 
@@ -432,8 +448,10 @@ public class TypeChecker{
         temp = lines[12].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
+        type = table.getType(name);
+        type = typeOf(type);
 
-        if (!name.equals("n")){
+        if (!type.equals("n")){
             throw new RuntimeException("Type Error");
             // return false;
         }
@@ -483,7 +501,7 @@ public class TypeChecker{
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        getToken(temp);
+        temp = getToken(temp);
 
         if (temp.equals("{") || temp.equals("}")) return true;
 
@@ -549,9 +567,6 @@ public class TypeChecker{
         else 
             throw new RuntimeException("Type Error");
             // return "u";
-
-
-        
     }
 
     private String handleAtomics(String id) {
@@ -567,7 +582,9 @@ public class TypeChecker{
 
         if (temp.equals("VNAME")) {
             temp = handleNames(id);
-            return table.getType(temp);
+            String type = table.getType(temp);
+            if (type.length() == 1) return type;
+            else return typeOf(table.getType(temp));
         }
         else {
             temp = handleConstants(id);

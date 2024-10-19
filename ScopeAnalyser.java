@@ -542,6 +542,10 @@ public class ScopeAnalyser {
 
         String type = handleDatatypes(temp);
 
+        if (type.equals("void")) type = "v";
+        else if (type.equals("num")) type = "n";
+        else type = "u";
+
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
         String name = handleNames(temp);
@@ -571,7 +575,7 @@ public class ScopeAnalyser {
 
             identifier = new Identifier();
             identifier.setName(name);
-            identifier.setType("dynamic");
+            identifier.setType("num");
             identifier.setId('v'+temp);
             table.insert(scopes.peek(), identifier);
         }
