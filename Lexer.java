@@ -487,7 +487,7 @@ enum Type {
 class TokenStream{
     private List<Token> tokens;
 
-    public TokenStream(String filename) {
+    public TokenStream(String filename, String outfile) {
         Lexer lexer = new Lexer();
         tokens = lexer.lexFile(filename);
         List<Token> filteredTokens = new ArrayList<>();
@@ -529,9 +529,8 @@ class TokenStream{
         sb.append("  </TOK>\n");
         sb.append("</TOKENSTREAM>");
         try {
-            String [] parts = filename.split("/")[1].split("\\.");
-            Files.write(Paths.get("lexer/" + parts[0] + ".xml"), sb.toString().getBytes());
-            System.out.println("Lexer output written to lexer/" + parts[0] + ".xml");
+            Files.write(Paths.get("lexer/" + outfile + ".xml"), sb.toString().getBytes());
+            System.out.println("Lexer output written to lexer/" + outfile + ".xml");
         } catch (IOException e) {
             e.printStackTrace();
         }
