@@ -226,7 +226,9 @@ public class ScopeAnalyser {
             out.close();
             fileOut.close();
 
+            System.out.println("Scopes saved in scopes/"+filename+".ser");
             changeNames(filename);
+            System.out.println("Names changed in scopes/"+filename+".xml");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -29,7 +29,7 @@ public class TypeChecker{
     ScopeTable table;
 
     public TypeChecker(String filename) {
-        xpath = new XPATH(filename);
+        xpath = new XPATH("scopes/"+filename+".xml");
         try {
             java.io.FileInputStream fileIn = new java.io.FileInputStream("scopes/"+filename+".ser");
             java.io.ObjectInputStream in = new java.io.ObjectInputStream(fileIn);
@@ -44,9 +44,42 @@ public class TypeChecker{
 
     }
 
-    public void analyse() {
+    public void analyse(String filename) {
         try {
             handleS(); 
+            java.io.FileOutputStream fileOut = new java.io.FileOutputStream("typers/"+filename+".ser");
+            java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(fileOut);
+            out.writeObject(table);
+            out.close();
+            fileOut.close();
+            System.out.println("Type Checked saved in typers/"+filename+".ser");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printTable(String filename) {
+        try {
+            java.io.FileInputStream fileIn = new java.io.FileInputStream("typers/"+filename+".ser");
+            java.io.ObjectInputStream in = new java.io.ObjectInputStream(fileIn);
+            ScopeTable table = (ScopeTable) in.readObject();
+            in.close();
+            fileIn.close();
+
+            java.io.FileWriter fileWriter = new java.io.FileWriter("typers/"+filename+".txt");
+            java.io.BufferedWriter writer = new java.io.BufferedWriter(fileWriter);
+    
+            for (String scope : table.table.keySet()) {
+                writer.write("Scope: " + scope + "\n");
+                for (Identifier id : table.table.get(scope)) {
+                    writer.write("Name: " + id.name + ", Type: " + id.type + ", Value: " + id.value + ", ID: " + id.id + "\n");
+                }
+            }
+    
+            // Close the writer
+            writer.close();
+            fileWriter.close();
+    
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,16 +146,33 @@ public class TypeChecker{
 
         String temp2 = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        Boolean type = true;
-        int leaf = handleLeafs(temp, type);
+        Boolean type[] = {null};
+        String[] arg = {null};  
+        
+        int leaf = handleLeafs(temp, type, arg); 
 
         if (leaf == 0) {
             if (!temp2.equals("</CHILDREN>")) {
-               type = handleAtomics(temp2);
+                String type2 = handleAtomics(temp2);
+
+                if (type2.equals("t") || type2.equals("n")) {
+                    return true;
+                }
             }
+
+            return true;
         }
 
-        return type;
+        if (type[0] != null) {
+            return type[0];
+        }
+
+        if (arg[0] != null) {
+            return arg[0].equals("n");
+        }
+
+        throw new RuntimeException("Type Error");
+        // return false;
         
     }
 
@@ -136,14 +186,14 @@ public class TypeChecker{
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
-        String algoType = handleAlgos(temp);
+        boolean algoType = handleAlgos(temp);
 
 
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
-        String algo2Type = handleAlgos(temp);
+        boolean algo2Type = handleAlgos(temp);
 
-        return condType.equals("b") && algoType.equals(algo2Type);
+        return condType.equals("b") && algoType && algo2Type;
 
     }
 
@@ -187,10 +237,11 @@ public class TypeChecker{
         if (binop.equals(atomic2) && binop.equals(atomic1) && binop.equals("b")) return  "b";
         if (atomic1.equals(atomic2) && atomic1.equals("n") && binop.equals("c")) return  "b";
 
-        return "u";
+        throw new RuntimeException("Type Error");
+        // return "u";
     }
 
-    private void handleComposit(String id) {
+    private String handleComposit(String id) {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String[] temp2 = lines;
@@ -204,47 +255,39 @@ public class TypeChecker{
         temp = lines[3].replace("<SYMB>", "").replace("</SYMB>", "").trim();
 
         if (temp.equals("BINOP")){
-            handleBinops(id);
+            String binopType = handleBinops(id);
             lines = temp2;
-            temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
 
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
-            handleSimple(temp);
-
-            temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
+            String type1 = handleSimple(temp);
 
             temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
-            handleSimple(temp);
+            String type2 = handleSimple(temp);
 
-            temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
+            if (binopType.equals(type1) && binopType.equals(type2) && binopType.equals("b")) return  "b";
 
 
         }
         else{
-            handleUnops(id);
+            String unopType = handleUnops(id);
             lines = temp2;
-            temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
 
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
-            handleSimple(temp);
+            String type = handleSimple(temp);
 
-            temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
+            if (unopType.equals(type)) return unopType;
         }
 
+        throw new RuntimeException("Type Error");
+        // return "u";
     }
 
 
-    private int handleLeafs(String id, Boolean type){
+    private int handleLeafs(String id, Boolean[] type, String[] arg) {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
             getToken(id);
-            type = true;
             return 0;
         }
         
@@ -252,13 +295,13 @@ public class TypeChecker{
 
         switch (temp) {
             case "ASSIGN":
-                type = handleAssignments(id);
+                type[0] = handleAssignments(id);
                 break;
             case "CALL":
-                type = handleCalls(id);
+                arg[0] = handleCalls(id);
                 break;
             case "BRANCH":
-                type = handleBranches(id);
+                type[0] = handleBranches(id);
                 break;
         }
 
@@ -266,20 +309,22 @@ public class TypeChecker{
          
     }
 
-    private void handleFuncs(String id){
+    private boolean handleFuncs(String id){
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
-            return;
+            return true;
         }
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleDeclarations(temp);
+        boolean typedecl = handleDeclarations(temp);
 
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleFuncs(temp);
+        boolean typeFunc = handleFuncs(temp);
+
+        return typedecl && typeFunc;
 
     }
 
@@ -324,8 +369,6 @@ public class TypeChecker{
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
         String temp = lines[4].replace("<TOKEN>", "").replace("</TOKEN>", "").trim();
 
-        System.out.print(temp+" ");
-
         return temp;
     }
 
@@ -337,111 +380,118 @@ public class TypeChecker{
 
     }
 
-    private void handleDeclarations(String id) {
+    private boolean handleDeclarations(String id) {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleHeaders(temp);
+        boolean type1 = handleHeaders(temp);
 
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleBody(temp);
+        boolean type2 = handleBody(temp);
 
+        return type1 && type2;
 
 
     }
 
-    private void handleHeaders(String id) {
+    private boolean handleHeaders(String id) {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleDatatypes(temp);
+        String type = handleDatatypes(temp);
 
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        String name = handleNames(temp);
 
-        temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
+        table.setType(name, typeOf(type));
 
-        getToken(temp);
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        name = handleNames(temp);
 
-        temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
+        if (!table.getType(name).equals("n")) {
+            throw new RuntimeException("Type Error");
+            // return false;
+        }
 
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        name = handleNames(temp);
 
-        temp = lines[11].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
+        if (!table.getType(name).equals("n")){
+            throw new RuntimeException("Type Error");
+            // return false;
+        } 
 
 
         temp = lines[12].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        name = handleNames(temp);
 
-        temp = lines[13].replace("<ID>", "").replace("</ID>", "").trim();
+        if (!table.getType(name).equals("n")){
+            throw new RuntimeException("Type Error");
+            // return false;
+        }
 
-        getToken(temp);
+        return true;
 
     }
 
-    private void handleBody(String id) {
+    private boolean handleBody(String id) {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleLogs(temp);
+        boolean typeLogs = handleLogs(temp);
 
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleLocals(temp);
+        boolean typeLocals = handleLocals(temp);
 
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleAlgos(temp);
+        boolean typeAlgos = handleAlgos(temp);
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleLogs(temp);
+        typeLogs = handleLogs(temp) && typeLogs;
 
         temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleSubs(temp);
+        boolean typeSubs = handleSubs(temp);
 
-        temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
-        getToken(temp);
-
+        return typeLogs && typeLocals && typeAlgos && typeSubs;
     }
 
-    private void handleSubs(String id){
+    private boolean handleSubs(String id){
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleFuncs(temp);
+        return handleFuncs(temp);
 
     }
 
-    private void handleLogs(String id){
+    private boolean handleLogs(String id){
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
         getToken(temp);
 
+        if (temp.equals("{") || temp.equals("}")) return true;
+
+        else return false;
+
     }
 
-    private void handleLocals(String id) {
+    private boolean handleLocals(String id) {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
 
@@ -449,17 +499,17 @@ public class TypeChecker{
 
             String temp = lines[i].replace("<ID>", "").replace("</ID>", "").trim();
 
-            handleDatatypes(temp);
+            String type = handleDatatypes(temp);
 
             temp = lines[i+1].replace("<ID>", "").replace("</ID>", "").trim();
 
-            handleNames(temp);
+            String name = handleNames(temp);
 
-            temp = lines[i+2].replace("<ID>", "").replace("</ID>", "").trim();
-
-            getToken(temp);
+            table.setType(name, typeOf(type));
 
         }
+
+        return true;
 
     }
 
@@ -493,7 +543,12 @@ public class TypeChecker{
         name = handleAtomics(temp);
         nameType = table.getType(name).equals("n") && nameType;
 
-        return nameType ? funcType : "u";
+        if (nameType) return funcType;
+        else 
+            throw new RuntimeException("Type Error");
+            // return "u";
+
+
         
     }
 
@@ -550,9 +605,9 @@ public class TypeChecker{
         if (temp.equals("=")){
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
-            String name = handleTerms(temp);
+            String type2 = handleTerms(temp);
 
-            return table.getType(name).equals(type);
+            return type2.equals(type);
         }
         else {
             if (type.equals("n")) return true;
@@ -612,7 +667,9 @@ public class TypeChecker{
             
             if (arg1.equals(arg3) && arg1.equals("n") && type.equals("b")) return type;
 
-            else return "u";
+            else 
+                throw new RuntimeException("Type Error");
+                // return "u";
         }
         else{
             String type = handleUnops(id);
@@ -622,7 +679,9 @@ public class TypeChecker{
             String arg1 = handleArgs(temp);
 
             if (type.equals(arg1)) return type;
-            else return "u";
+            else 
+                throw new RuntimeException("Type Error");
+                // return "u";
 
         }
 

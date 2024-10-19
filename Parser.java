@@ -154,9 +154,8 @@ public class Parser{
             XMLTree xmlTree = parse(br);
             String [] parts = filename.split("/")[1].split("\\.");
             writeToFile("parser/" + parts[0] + ".xml", xmlTree);
-
+            System.out.println("Parser output written to parser/" + parts[0] + ".xml");
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

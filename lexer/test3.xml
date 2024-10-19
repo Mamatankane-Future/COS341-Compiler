@@ -141,8 +141,8 @@
   </TOK>
   <TOK>
     <ID>29</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_name</WORD>
+    <CLASS>NUMBER</CLASS>
+    <WORD>11</WORD>
   </TOK>
   <TOK>
     <ID>30</ID>
@@ -196,8 +196,8 @@
   </TOK>
   <TOK>
     <ID>40</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_name</WORD>
+    <CLASS>NUMBER</CLASS>
+    <WORD>11</WORD>
   </TOK>
   <TOK>
     <ID>41</ID>
@@ -406,8 +406,8 @@
   </TOK>
   <TOK>
     <ID>82</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_name2</WORD>
+    <CLASS>NUMBER</CLASS>
+    <WORD>11</WORD>
   </TOK>
   <TOK>
     <ID>83</ID>

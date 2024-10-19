@@ -1,16 +1,23 @@
-
+import java.io.PrintWriter;
 
 public class PrintXML{
 
     XPATH xpath;
+    StringBuilder sb = new StringBuilder();
 
     public PrintXML(String filename) {
         xpath = new XPATH(filename);
     }
 
-    public void analyse() {
+    public void analyse(String filename) {
         try {
-            handleS(); 
+            handleS();
+
+            PrintWriter writer = new PrintWriter("scopes/" + filename + "(renames).txt", "UTF-8");
+            writer.println(sb.toString());
+            writer.close();
+            
+            System.out.println("Printed XML to scopes/" + filename + "(renames).txt");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -308,7 +315,7 @@ public class PrintXML{
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
         String temp = lines[4].replace("<TOKEN>", "").replace("</TOKEN>", "").trim();
 
-        System.out.print(temp+" ");
+        sb.append(temp+" ");
 
         return temp;
     }

@@ -531,6 +531,7 @@ class TokenStream{
         try {
             String [] parts = filename.split("/")[1].split("\\.");
             Files.write(Paths.get("lexer/" + parts[0] + ".xml"), sb.toString().getBytes());
+            System.out.println("Lexer output written to lexer/" + parts[0] + ".xml");
         } catch (IOException e) {
             e.printStackTrace();
         }

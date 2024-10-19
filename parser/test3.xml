@@ -1122,7 +1122,7 @@
     <IN>
       <PARENT>60</PARENT>
       <UNID>59</UNID>
-      <SYMB>VNAME</SYMB>
+      <SYMB>CONST</SYMB>
       <CHILDREN>
         <ID>58</ID>
       </CHILDREN>
@@ -1349,7 +1349,7 @@
     <IN>
       <PARENT>174</PARENT>
       <UNID>173</UNID>
-      <SYMB>VNAME</SYMB>
+      <SYMB>CONST</SYMB>
       <CHILDREN>
         <ID>172</ID>
       </CHILDREN>
@@ -1401,7 +1401,7 @@
     <IN>
       <PARENT>81</PARENT>
       <UNID>80</UNID>
-      <SYMB>VNAME</SYMB>
+      <SYMB>CONST</SYMB>
       <CHILDREN>
         <ID>79</ID>
       </CHILDREN>
@@ -2551,7 +2551,7 @@
       <PARENT>59</PARENT>
       <UNID>58</UNID>
       <TERMINAL>
-        <TOKEN>V_name</TOKEN>
+        <TOKEN>11</TOKEN>
       </TERMINAL>
     </LEAF>
     <LEAF>
@@ -2712,7 +2712,7 @@
       <PARENT>173</PARENT>
       <UNID>172</UNID>
       <TERMINAL>
-        <TOKEN>V_name2</TOKEN>
+        <TOKEN>11</TOKEN>
       </TERMINAL>
     </LEAF>
     <LEAF>
@@ -2768,7 +2768,7 @@
       <PARENT>80</PARENT>
       <UNID>79</UNID>
       <TERMINAL>
-        <TOKEN>V_name</TOKEN>
+        <TOKEN>11</TOKEN>
       </TERMINAL>
     </LEAF>
     <LEAF>

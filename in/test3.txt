@@ -7,8 +7,8 @@ main
         print V_age;
         V_age = sub(2024,2003);
         V_name < input;
-        F_print(V_name, V_age, 2);
-        V_age = F_print3(V_name, V_age, 2);
+        F_print(11 , V_age, 2);
+        V_age = F_print3(11 , V_age, 2);
     end
 
     void F_print(V_arg1, V_arg2, V_arg3)
@@ -21,7 +21,7 @@ main
             V_age = V_arg1;
             V_name = V_arg2;
             V_many = V_arg3;
-            F_print3(V_name2, V_age2, 2);
+            F_print3(11 , V_age2, 2);
         end
     }
 
