@@ -3,7 +3,7 @@ public class Main {
     public static void main(String[] args) {
         String filename = "test3";
         String outfile = "output";
-        TokenStream stream = new TokenStream("in/" + filename + ".txt");
+        new TokenStream("in/" + filename + ".txt");
 
         Parser parser = new Parser();
         parser.parse("lexer/" + outfile + ".xml");
