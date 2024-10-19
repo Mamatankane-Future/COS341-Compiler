@@ -2,21 +2,22 @@ public class Main {
     
     public static void main(String[] args) {
         String filename = "test3";
+        String outfile = "output";
         TokenStream stream = new TokenStream("in/" + filename + ".txt");
 
         Parser parser = new Parser();
-        parser.parse("lexer/" + filename + ".xml");
+        parser.parse("lexer/" + outfile + ".xml");
 
-        ScopeAnalyser scopeAnalyser = new ScopeAnalyser("parser/" + filename + ".xml");
-        scopeAnalyser.analyse(filename);
-        scopeAnalyser.printTable(filename);
+        ScopeAnalyser scopeAnalyser = new ScopeAnalyser("parser/" + outfile + ".xml");
+        scopeAnalyser.analyse(outfile);
+        scopeAnalyser.printTable(outfile);
 
-        PrintXML printXML = new PrintXML("scopes/" + filename + ".xml");
-        printXML.analyse(filename);
+        PrintXML printXML = new PrintXML("scopes/" + outfile + ".xml");
+        printXML.analyse(outfile);
 
-        TypeChecker typeChecker = new TypeChecker(filename);
-        typeChecker.analyse(filename);
-        // typeChecker.printTable(filename);
+        TypeChecker typeChecker = new TypeChecker(outfile);
+        typeChecker.analyse(outfile);
+        typeChecker.printTable(outfile);
 
 
     }

@@ -1,3 +1,0 @@
-Scope: global
-Name: V_name, Type: text, Value: null, ID: v5
-Name: V_age, Type: num, Value: null, ID: v10
