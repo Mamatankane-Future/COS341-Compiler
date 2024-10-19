@@ -1,12 +1,14 @@
 main
     text V_name,
     num V_age,
+    num V_time,
 
     begin
         print 2025;
         print V_age;
+        V_time <input;
         V_age = sub(2024,2003);
-        V_name < input;
+        V_name = "Future";
         F_print(11 , V_age, 2);
         V_age = F_print3(11 , V_age, 2);
     end

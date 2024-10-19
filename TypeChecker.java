@@ -414,7 +414,7 @@ public class TypeChecker{
 
         name = handleNames(temp);
 
-        if (!table.getType(name).equals("n")) {
+        if (!name.equals("n")) {
             throw new RuntimeException("Type Error");
             // return false;
         }
@@ -423,7 +423,7 @@ public class TypeChecker{
 
         name = handleNames(temp);
 
-        if (!table.getType(name).equals("n")){
+        if (!name.equals("n")){
             throw new RuntimeException("Type Error");
             // return false;
         } 
@@ -433,7 +433,7 @@ public class TypeChecker{
 
         name = handleNames(temp);
 
-        if (!table.getType(name).equals("n")){
+        if (!name.equals("n")){
             throw new RuntimeException("Type Error");
             // return false;
         }
@@ -487,7 +487,9 @@ public class TypeChecker{
 
         if (temp.equals("{") || temp.equals("}")) return true;
 
-        else return false;
+        else 
+            throw new RuntimeException("Type Error");
+            // return false;
 
     }
 
@@ -528,20 +530,20 @@ public class TypeChecker{
 
         String name = handleAtomics(temp);
 
-        boolean nameType = table.getType(name).equals("n");
+        boolean nameType = name.equals("n");
 
 
         temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleAtomics(temp);
-        nameType = table.getType(name).equals("n") && nameType;
+        nameType = name.equals("n") && nameType;
 
 
 
         temp = lines[11].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleAtomics(temp);
-        nameType = table.getType(name).equals("n") && nameType;
+        nameType = name.equals("n") && nameType;
 
         if (nameType) return funcType;
         else 
@@ -569,7 +571,7 @@ public class TypeChecker{
         }
         else {
             temp = handleConstants(id);
-            String alphabeticPattern = "^[a-zA-Z]+$";
+            String alphabeticPattern = "^\"[a-zA-Z]+\"$";
             String numericPattern = "^[0-9]+$";
             if (temp.matches(alphabeticPattern)) return "t";
             if (temp.matches(numericPattern)) return "n";
@@ -611,7 +613,9 @@ public class TypeChecker{
         }
         else {
             if (type.equals("n")) return true;
-            else return false;
+            else 
+                throw new RuntimeException("Type Error");
+                // return false;
         }
    
     }
