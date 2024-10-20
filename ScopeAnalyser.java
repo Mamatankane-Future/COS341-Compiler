@@ -425,6 +425,20 @@ public class ScopeAnalyser {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
+            String temp = getToken(id);
+
+
+            if (temp.equals("return")) {
+                if (scopes.peek().equals("global")) throw new RuntimeException("Return statement found in main");
+
+                String scope = scopes.peek();
+                
+                Identifier identifier = table.get(scope, scope.substring(scope.lastIndexOf('.')+1));
+
+                if (identifier.type.equals("v")) {
+                    throw new RuntimeException("Return statement found in void function");
+                }
+            }
             return 0;
         }
         
