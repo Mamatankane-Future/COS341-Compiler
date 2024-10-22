@@ -592,7 +592,7 @@
   <TOK>
     <ID>119</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>eq</WORD>
+    <WORD>not</WORD>
   </TOK>
   <TOK>
     <ID>120</ID>
@@ -601,43 +601,43 @@
   </TOK>
   <TOK>
     <ID>121</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_arg3</WORD>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>eq</WORD>
   </TOK>
   <TOK>
     <ID>122</ID>
     <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>,</WORD>
+    <WORD>(</WORD>
   </TOK>
   <TOK>
     <ID>123</ID>
-    <CLASS>NUMBER</CLASS>
-    <WORD>0</WORD>
+    <CLASS>VARIABLE</CLASS>
+    <WORD>V_arg3</WORD>
   </TOK>
   <TOK>
     <ID>124</ID>
     <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>)</WORD>
+    <WORD>,</WORD>
   </TOK>
   <TOK>
     <ID>125</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>then</WORD>
+    <CLASS>NUMBER</CLASS>
+    <WORD>0</WORD>
   </TOK>
   <TOK>
     <ID>126</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>begin</WORD>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>)</WORD>
   </TOK>
   <TOK>
     <ID>127</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>end</WORD>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>)</WORD>
   </TOK>
   <TOK>
     <ID>128</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>else</WORD>
+    <WORD>then</WORD>
   </TOK>
   <TOK>
     <ID>129</ID>
@@ -741,88 +741,88 @@
   </TOK>
   <TOK>
     <ID>149</ID>
-    <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>;</WORD>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>else</WORD>
   </TOK>
   <TOK>
     <ID>150</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>end</WORD>
+    <WORD>begin</WORD>
   </TOK>
   <TOK>
     <ID>151</ID>
-    <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>}</WORD>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>print</WORD>
   </TOK>
   <TOK>
     <ID>152</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>end</WORD>
+    <CLASS>NUMBER</CLASS>
+    <WORD>2025</WORD>
   </TOK>
   <TOK>
     <ID>153</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>end</WORD>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>;</WORD>
   </TOK>
   <TOK>
     <ID>154</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>num</WORD>
+    <WORD>end</WORD>
   </TOK>
   <TOK>
     <ID>155</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>;</WORD>
+  </TOK>
+  <TOK>
+    <ID>156</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>end</WORD>
+  </TOK>
+  <TOK>
+    <ID>157</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>}</WORD>
+  </TOK>
+  <TOK>
+    <ID>158</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>end</WORD>
+  </TOK>
+  <TOK>
+    <ID>159</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>end</WORD>
+  </TOK>
+  <TOK>
+    <ID>160</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>num</WORD>
+  </TOK>
+  <TOK>
+    <ID>161</ID>
     <CLASS>FUNCTION</CLASS>
     <WORD>F_print3</WORD>
   </TOK>
   <TOK>
-    <ID>156</ID>
+    <ID>162</ID>
     <CLASS>RESERVED_CHARACTER</CLASS>
     <WORD>(</WORD>
   </TOK>
   <TOK>
-    <ID>157</ID>
+    <ID>163</ID>
     <CLASS>VARIABLE</CLASS>
     <WORD>V_arg1</WORD>
   </TOK>
   <TOK>
-    <ID>158</ID>
-    <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>,</WORD>
-  </TOK>
-  <TOK>
-    <ID>159</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_arg2</WORD>
-  </TOK>
-  <TOK>
-    <ID>160</ID>
-    <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>,</WORD>
-  </TOK>
-  <TOK>
-    <ID>161</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_arg3</WORD>
-  </TOK>
-  <TOK>
-    <ID>162</ID>
-    <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>)</WORD>
-  </TOK>
-  <TOK>
-    <ID>163</ID>
-    <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>{</WORD>
-  </TOK>
-  <TOK>
     <ID>164</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>text</WORD>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>,</WORD>
   </TOK>
   <TOK>
     <ID>165</ID>
     <CLASS>VARIABLE</CLASS>
-    <WORD>V_name2</WORD>
+    <WORD>V_arg2</WORD>
   </TOK>
   <TOK>
     <ID>166</ID>
@@ -831,28 +831,28 @@
   </TOK>
   <TOK>
     <ID>167</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>num</WORD>
+    <CLASS>VARIABLE</CLASS>
+    <WORD>V_arg3</WORD>
   </TOK>
   <TOK>
     <ID>168</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_age2</WORD>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>)</WORD>
   </TOK>
   <TOK>
     <ID>169</ID>
     <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>,</WORD>
+    <WORD>{</WORD>
   </TOK>
   <TOK>
     <ID>170</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>num</WORD>
+    <WORD>text</WORD>
   </TOK>
   <TOK>
     <ID>171</ID>
     <CLASS>VARIABLE</CLASS>
-    <WORD>V_many</WORD>
+    <WORD>V_name2</WORD>
   </TOK>
   <TOK>
     <ID>172</ID>
@@ -862,40 +862,105 @@
   <TOK>
     <ID>173</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>begin</WORD>
+    <WORD>num</WORD>
   </TOK>
   <TOK>
     <ID>174</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>return</WORD>
+    <CLASS>VARIABLE</CLASS>
+    <WORD>V_age2</WORD>
   </TOK>
   <TOK>
     <ID>175</ID>
-    <CLASS>VARIABLE</CLASS>
-    <WORD>V_arg2</WORD>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>,</WORD>
   </TOK>
   <TOK>
     <ID>176</ID>
-    <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>;</WORD>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>num</WORD>
   </TOK>
   <TOK>
     <ID>177</ID>
-    <CLASS>RESERVED_WORD</CLASS>
-    <WORD>end</WORD>
+    <CLASS>VARIABLE</CLASS>
+    <WORD>V_many</WORD>
   </TOK>
   <TOK>
     <ID>178</ID>
     <CLASS>RESERVED_CHARACTER</CLASS>
-    <WORD>}</WORD>
+    <WORD>,</WORD>
   </TOK>
   <TOK>
     <ID>179</ID>
     <CLASS>RESERVED_WORD</CLASS>
-    <WORD>end</WORD>
+    <WORD>begin</WORD>
   </TOK>
   <TOK>
     <ID>180</ID>
+    <CLASS>VARIABLE</CLASS>
+    <WORD>V_many</WORD>
+  </TOK>
+  <TOK>
+    <ID>181</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>=</WORD>
+  </TOK>
+  <TOK>
+    <ID>182</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>sqrt</WORD>
+  </TOK>
+  <TOK>
+    <ID>183</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>(</WORD>
+  </TOK>
+  <TOK>
+    <ID>184</ID>
+    <CLASS>NUMBER</CLASS>
+    <WORD>4</WORD>
+  </TOK>
+  <TOK>
+    <ID>185</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>)</WORD>
+  </TOK>
+  <TOK>
+    <ID>186</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>;</WORD>
+  </TOK>
+  <TOK>
+    <ID>187</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>return</WORD>
+  </TOK>
+  <TOK>
+    <ID>188</ID>
+    <CLASS>VARIABLE</CLASS>
+    <WORD>V_arg2</WORD>
+  </TOK>
+  <TOK>
+    <ID>189</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>;</WORD>
+  </TOK>
+  <TOK>
+    <ID>190</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>end</WORD>
+  </TOK>
+  <TOK>
+    <ID>191</ID>
+    <CLASS>RESERVED_CHARACTER</CLASS>
+    <WORD>}</WORD>
+  </TOK>
+  <TOK>
+    <ID>192</ID>
+    <CLASS>RESERVED_WORD</CLASS>
+    <WORD>end</WORD>
+  </TOK>
+  <TOK>
+    <ID>193</ID>
     <CLASS>TERMINATOR</CLASS>
     <WORD>$</WORD>
   </TOK>

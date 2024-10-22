@@ -1,135 +1,138 @@
-10 v5 := "";
-20 v10 := 0;
-30 v15 := 0;
-40 PRINT 2025;
-50 PRINT v10;
-60 INPUT v15;
-70 T1 := 2024;
-80 T2 := 2003;
-90 T0 := T1 - T2;
-100 v10 := T0;
-110 T3 := "Future";
-120 v5 := T3;
-130 M[SP + 8 * 0] := v5;
-140 M[SP + 8 * 1] := v10;
-150 M[SP + 8 * 2] := v15;
-160 SP := SP - 8 * 4;
-170 M[SP + 8] := 11;
-180 M[SP + 16] := v10;
-190 M[SP + 24] := 2;
-200 M[SP] := L0;
-210 GOTO f125;
-220 LABEL L0;
-230 SP := SP + 8 * 4;
-240 M[SP + 8 * 0] := v5;
-250 M[SP + 8 * 1] := v10;
-260 M[SP + 8 * 2] := v15;
-270 SP := SP - 8 * 4;
-280 M[SP + 8] := 11;
-290 M[SP + 16] := v10;
-300 M[SP + 24] := 2;
-310 M[SP] := L1;
-320 GOTO f335;
-330 LABEL L1;
-340 T4 := M[SP + 8]
-350 SP := SP + 8 * 4;
-360 v10 := T4;
-370 REM END;
-380 STOP;
-390 LABEL f125;
-400 SP := SP - 8 * 8;
-410 M[SP + 32] := R0;
-420 M[SP + 40] := R1;
-430 M[SP + 48] := R2;
-440 M[SP + 56] := R3;
-450 p128 := M[SP + 64];
-460 p131 := M[SP + 72];
-470 p134 := M[SP + 80];
-480 REM BEGIN;
-490 v142 := 0;
-500 v147 := 0;
-510 v152 := 0;
-520 T5 := p128;
-530 v10 := T5;
-540 T6 := p131;
-550 v142 := T6;
-560 T7 := p134;
-570 v152 := T7;
-580 M[SP + 8 * 0] := v5;
-590 M[SP + 8 * 1] := v10;
-600 M[SP + 8 * 2] := v15;
-610 SP := SP - 8 * 4;
-620 M[SP + 8] := 11;
-630 M[SP + 16] := v147;
-640 M[SP + 24] := 2;
-650 M[SP] := L2;
-660 GOTO f216;
-670 LABEL L2;
-680 SP := SP + 8 * 4;
-690 REM END;
-700 REM END;
-710 LABEL f216;
-720 SP := SP - 8 * 8;
-730 M[SP + 32] := R0;
-740 M[SP + 40] := R1;
-750 M[SP + 48] := R2;
-760 M[SP + 56] := R3;
-770 p219 := M[SP + 64];
-780 p222 := M[SP + 72];
-790 p225 := M[SP + 80];
-800 REM BEGIN;
-810 v233 := "";
-820 v238 := 0;
-830 v243 := 0;
-840 IF p225 = 0 THEN GOTO L3;
-850 ELSE GOTO L4;
-860 LABEL L3;
-870 REM END;
-880 LABEL L4;
-890 T9 := p225;
-900 T10 := 1;
-910 T8 := T9 - T10;
-920 v238 := T8;
-930 M[SP + 8 * 0] := v5;
-940 M[SP + 8 * 1] := v10;
-950 M[SP + 8 * 2] := v15;
-960 SP := SP - 8 * 4;
-970 M[SP + 8] := p219;
-980 M[SP + 16] := p222;
-990 M[SP + 24] := v238;
-1000 M[SP] := L5;
-1010 GOTO f216;
-1020 LABEL L5;
-1030 SP := SP + 8 * 4;
-1040 REM END;
-1050 REM END;
-1060 REM END;
-1070 REM END;
-1080 STOP;
-1090 REM END;
-1100 STOP;
-1110 LABEL f335;
-1120 SP := SP - 8 * 8;
-1130 M[SP + 32] := R0;
-1140 M[SP + 40] := R1;
-1150 M[SP + 48] := R2;
-1160 M[SP + 56] := R3;
-1170 p338 := M[SP + 64];
-1180 p341 := M[SP + 72];
-1190 p344 := M[SP + 80];
-1200 REM BEGIN;
-1210 v352 := "";
-1220 v357 := 0;
-1230 v362 := 0;
-1240 p341:= M[SP + 88];
-1250 R0 := M[SP + 32];
-1260 R1 := M[SP + 40];
-1270 R2 := M[SP + 48];
-1280 R3 := M[SP + 56];
-1290 SP := SP + 8 * 8;
-1300 GOTO M[SP];
-1310 REM END;
-1320 REM END;
-1330 REM END;
-1340 STOP;
-1350 REM END;
+10 LET v$ = ""
+20 LET v10 = 0
+30 LET v15 = 0
+40 No match found.
+50 No match found.
+60 No match found.
+70 LET T1 = 2024
+80 LET T2 = 2003
+90 LET T0 = T1 - T2
+100 No match found.
+110 LET T$ = "Future"
+120 No match found.
+130 No match found.
+140 No match found.
+150 No match found.
+160 LET SP = S  P
+170 No match found.
+180 No match found.
+190 No match found.
+200 No match found.
+210 No match found.
+220 No match found.
+230 LET SP = S  P
+240 No match found.
+250 No match found.
+260 No match found.
+270 LET SP = S  P
+280 No match found.
+290 No match found.
+300 No match found.
+310 No match found.
+320 No match found.
+330 No match found.
+340 No match found.
+350 LET SP = S  P
+360 No match found.
+370 No match found.
+380 No match found.
+390 No match found.
+400 LET SP = S  P
+410 No match found.
+420 No match found.
+430 No match found.
+440 No match found.
+450 No match found.
+460 No match found.
+470 No match found.
+480 No match found.
+490 LET v142 = 0
+500 LET v147 = 0
+510 LET v152 = 0
+520 No match found.
+530 No match found.
+540 No match found.
+550 No match found.
+560 No match found.
+570 No match found.
+580 No match found.
+590 No match found.
+600 No match found.
+610 LET SP = S  P
+620 No match found.
+630 No match found.
+640 No match found.
+650 No match found.
+660 No match found.
+670 No match found.
+680 LET SP = S  P
+690 No match found.
+700 No match found.
+710 No match found.
+720 LET SP = S  P
+730 No match found.
+740 No match found.
+750 No match found.
+760 No match found.
+770 No match found.
+780 No match found.
+790 No match found.
+800 No match found.
+810 LET v$ = ""
+820 LET v238 = 0
+830 LET v243 = 0
+840 No match found.
+850 No match found.
+860 No match found.
+870 LET T10 = 1
+880 LET T8 = T9 - T10
+890 No match found.
+900 No match found.
+910 No match found.
+920 No match found.
+930 LET SP = S  P
+940 No match found.
+950 No match found.
+960 No match found.
+970 No match found.
+980 No match found.
+990 No match found.
+1000 LET SP = S  P
+1010 No match found.
+1020 No match found.
+1030 No match found.
+1040 No match found.
+1050 No match found.
+1060 No match found.
+1070 No match found.
+1080 No match found.
+1090 No match found.
+1100 No match found.
+1110 No match found.
+1120 LET SP = S  P
+1130 No match found.
+1140 No match found.
+1150 No match found.
+1160 No match found.
+1170 No match found.
+1180 No match found.
+1190 No match found.
+1200 No match found.
+1210 LET v$ = ""
+1220 LET v369 = 0
+1230 LET v374 = 0
+1240 LET T12 = 4
+1250 LET T11 = SQR  T12
+1260 No match found.
+1270 No match found.
+1280 No match found.
+1290 No match found.
+1300 No match found.
+1310 No match found.
+1320 LET SP = S  P
+1330 No match found.
+1340 No match found.
+1350 No match found.
+1360 No match found.
+1370 No match found.
+1380 No match found.

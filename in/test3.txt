@@ -34,11 +34,14 @@ main
             num V_loc3,
             
             begin
-                if eq(V_arg3, 0) then begin end
-                else
-                    begin
+                if not(eq(V_arg3, 0)) then 
+                    begin 
                         V_loc2 = sub(V_arg3, 1);
                         F_print3(V_arg1, V_arg2, V_loc2);
+                    end
+                else
+                    begin
+                        print 2025;  
                     end;
             end
         }
@@ -54,6 +57,7 @@ main
         num V_many,
         
         begin
+            V_many = sqrt(4);
             return V_arg2;
         end
     }

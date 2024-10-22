@@ -30,7 +30,6 @@ class BufferedFileWriter implements AutoCloseable {
         String text = stringBuilder.toString();
         writer.write(text);
         writer.flush();
-        System.out.println(text);
         stringBuilder.setLength(0);
     }
 
@@ -226,14 +225,14 @@ public class IntermediateCodeGenerator {
             writer.addString("IF ");
             handleSimple(id);
             writer.addString(" THEN ");
-            writer.addString("GOTO "+label1+";\n");
+            writer.addString("GOTO "+label1+" ");
             writer.addString("ELSE ");
             writer.addString("GOTO "+label2+";\n");
         }
         else {
             handleComposit(id);
             writer.addString("THEN ");
-            writer.addString("GOTO "+label1+"\n;");
+            writer.addString("GOTO "+label1+" ");
             writer.addString("ELSE ");
             writer.addString("GOTO "+label2+";\n");
         }
@@ -286,25 +285,28 @@ public class IntermediateCodeGenerator {
 
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
-            String place1 = newVar();
-            writer.addString(place1+" := ");
+            writer.addString("IF ");
             handleSimple(temp);
 
-            String place2 = newVar();
-            writer.addString(place2+" := ");
+            writer.addString(" "+op+" ");
+
             temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
             handleSimple(temp);
 
-            writer.addString("IF "+place1+" "+op+" "+place2+" ");
+            writer.addString(" ");
 
 
         }
         else{
-            handleUnops(id);
+            String op = handleUnops(id);
             lines = temp2;
+
+            writer.addString("IF "+op+" ");
 
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
             handleSimple(temp);
+            writer.addString(" ");
+
         }
 
     }

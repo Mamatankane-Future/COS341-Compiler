@@ -3,6 +3,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BasicCode {
 
@@ -17,7 +19,12 @@ public class BasicCode {
             String line;
             int lineNumber = 10; 
             while ((line = reader.readLine()) != null) {
-                String formattedLine = lineNumber +" "+line;
+                line = line.replace(";", "");
+                String temp = convertAssignments(line);
+                if (temp == null){
+                    temp = convertExpressions(line);
+                }
+                String formattedLine = lineNumber +" "+temp;
                 writer.write(formattedLine + "\n");
                 lineNumber += 10;
             }
@@ -31,22 +38,41 @@ public class BasicCode {
         }
     }
 
-    // // Convert the intermediate code line into a BASIC line
-    // private static String processIntermediateCode(String line, int lineNumber) {
-    //     // Basic mapping logic (you can expand this as per your specific rules)
-    //     if (line.contains("PRINT")) {
-    //         return lineNumber + " " + line;
-    //     } else if (line.contains("GOTO")) {
-    //         return lineNumber + " " + line;
-    //     } else if (line.contains("LABEL")) {
-    //         return lineNumber + " " + line.replace("LABEL", ""); // Convert LABELs
-    //     } else if (line.contains("STOP")) {
-    //         return lineNumber + " " + line;
-    //     } else if (line.contains(":=")) {
-    //         return lineNumber + " LET " + line.replace(":=", "="); // Convert assignments
-    //     }
-    //     // Default case: return as-is
-    //     return lineNumber + " " + line;
-    // }
+    private String convertAssignments(String input) {
+        String pattern = "([A-Za-z][A-Za-z0-9_]*)\\s*:=\\s*(\\d+|\".*\")";
+        Pattern r = Pattern.compile(pattern);
+        
+        Matcher m = r.matcher(input);
+        
+        if (m.find()) {
+            String variable = m.group(1);  
+            String value = m.group(2);     
+            
+            if (value.startsWith("\"")) {
+                return "LET " + variable.charAt(0) + "$ = " + value;
+            } else {
+                return "LET " + variable + " = " + value;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private static String convertExpressions(String input) {
+        String pattern = "([A-Za-z][A-Za-z0-9_]*)\\s*:=\\s*([A-Za-z][A-Za-z0-9_]*)\\s*([+\\-*/]||[&]{2}|[|]{2})\\s*([A-Za-z][A-Za-z0-9_]*)";
+        Pattern r = Pattern.compile(pattern);
+        
+        Matcher m = r.matcher(input);
+        
+        if (m.find()) {
+            String variable = m.group(1);
+            String operand1 = m.group(2);
+            String operator = m.group(3);
+            String operand2 = m.group(4);
+            return "LET " + variable + " = " + operand1 + " " + operator + " " + operand2;
+        } else {
+            return "No match found.";
+        }
+    }
     
 }
