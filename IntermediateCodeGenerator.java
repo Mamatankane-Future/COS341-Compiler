@@ -1,43 +1,49 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class BufferedFileWriter implements AutoCloseable {
-    private static final int MAX_BUFFER_LENGTH = 1024; 
-    private StringBuffer stringBuffer;
+    private static final int MAX_BUFFER_LENGTH = 1024;
+    private StringBuilder stringBuilder; 
     private BufferedWriter writer;
     private String filename;
 
     public BufferedFileWriter(String filename) throws IOException {
-        this.filename = "out/"+filename+ ".txt";
-        this.stringBuffer = new StringBuffer();
-        this.writer = new BufferedWriter(new FileWriter(filename, true)); 
+        this.filename = "out/" + filename + ".txt"; 
+        this.stringBuilder = new StringBuilder();
+        (new BufferedWriter(new FileWriter(this.filename))).close();
+        this.writer = new BufferedWriter(new FileWriter(this.filename, true));
     }
 
-    public void addString(String text) throws IOException {
-        stringBuffer.append(text).append("\n");
 
-        if (stringBuffer.length() >= MAX_BUFFER_LENGTH) {
+    public void addString(String text) throws IOException {
+        stringBuilder.append(text);
+
+        if (stringBuilder.length() >= MAX_BUFFER_LENGTH) {
             writeToFile();
         }
     }
 
     private void writeToFile() throws IOException {
-        writer.write(stringBuffer.toString());
-        stringBuffer.setLength(0); 
+        String text = stringBuilder.toString();
+        writer.write(text);
+        writer.flush();
+        System.out.println(text);
+        stringBuilder.setLength(0);
     }
 
     public void flush() throws IOException {
-        if (stringBuffer.length() > 0) {
+        if (stringBuilder.length() > 0) {
             writeToFile();
         }
     }
 
     @Override
     public void close() throws IOException {
-        flush(); 
-        writer.close(); 
+        flush();
+        writer.close();
     }
 }
 
@@ -45,29 +51,44 @@ public class IntermediateCodeGenerator {
 
     XPATH xpath;
     BufferedFileWriter writer;
+    private AtomicInteger counter = new AtomicInteger(0);
+    private AtomicInteger counter2 = new AtomicInteger(0);
+    private ScopeTable scopeTable;
+    private ArrayList<String> scopes = new ArrayList<>();
 
     public IntermediateCodeGenerator(String filename, String outputFilename) {
+        filename = "scopes/" + filename + ".xml";
         xpath = new XPATH(filename);
         try {
             writer = new BufferedFileWriter(outputFilename);
-        } catch (IOException e) {
+            scopeTable = new ScopeTable();
+            java.io.FileInputStream fileIn = new java.io.FileInputStream("typers/"+outputFilename+".ser");
+            java.io.ObjectInputStream in = new java.io.ObjectInputStream(fileIn);
+            ScopeTable table = (ScopeTable) in.readObject();
+            in.close();
+            fileIn.close();
+            this.scopeTable = table;
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void analyse() {
+    public void generate() {
         try {
             handleS();
+            writer.flush();
             System.out.println("Intermediate code generated successfully");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
     
 
     private void handleS() throws IOException{
         String temp = xpath.evaluate("//ROOT/CHILDREN/ID/text()")[0];
+        scopes.add("global");
         handleProg(temp);
     }
 
@@ -75,16 +96,40 @@ public class IntermediateCodeGenerator {
 
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
-        String temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
+        String temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
+
+        handleGlobals(temp);
+
+        temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleAlgos(temp);
 
-        writer.addString(" STOP ");
+        writer.addString("STOP;\n");
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleFuncs(temp);
 
+    }
+
+    private void handleGlobals(String id) throws IOException {
+        String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
+
+        if (lines[0].trim().equals( "<LEAF>")) {
+          return;
+        }
+
+
+        String temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
+
+        String name = handleNames(temp);
+
+        writer.addString(name+" := "+scopeTable.getValue(name)+";\n");
+    
+
+        temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
+
+        handleGlobals(temp);
     }
 
     private void handleAlgos(String id) throws IOException {
@@ -100,7 +145,7 @@ public class IntermediateCodeGenerator {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
-            writer.addString(" REM END ");
+            writer.addString("REM END;\n");
             return;
         }
 
@@ -108,17 +153,13 @@ public class IntermediateCodeGenerator {
 
         handleCommands(temp);
 
-        temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
-
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleInstructions(temp);
 
     }
 
-    private void handleCommands(String id){
+    private void handleCommands(String id) throws IOException{
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
@@ -130,41 +171,47 @@ public class IntermediateCodeGenerator {
         if (leaf == 0) {
             if (!temp2.equals("</CHILDREN>")) {
                 handleAtomics(temp2);
+                writer.addString(";\n");
             }
+        }
+
+        if (leaf == 2) {
+            handleAtomics(temp2);
+            int from = 32;
+            writer.addString(":= M[SP + "+(from+56)+"];\n");
+
+            writer.addString("R0 := M[SP + "+from+"];\n");
+            writer.addString("R1 := M[SP + "+(from+8)+"];\n");
+            writer.addString("R2 := M[SP + "+(from+16)+"];\n");
+            writer.addString("R3 := M[SP + "+(from+24)+"];\n");
+            writer.addString("SP := SP + 8 * 8;\n");
+            writer.addString("GOTO M[SP];\n");
         }
         
     }
 
-    private void handleBranches(String id) {
+    private void handleBranches(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
-        String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
+        String temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        getToken(temp);
-
-        temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-
-        handleConditions(temp);
-
-        temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
+        String label1 = newLabel();
+        String label2 = newLabel();
+        handleConditions(temp, label1, label2);
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
+        writer.addString("LABEL "+label1+";\n");
         handleAlgos(temp);
-
-        temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
 
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
+        writer.addString("LABEL "+label2+";\n");
         handleAlgos(temp);
 
     }
 
-    private void handleConditions(String id) {
+    private void handleConditions(String id, String label1, String label2) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
@@ -176,45 +223,49 @@ public class IntermediateCodeGenerator {
         temp = lines[3].replace("<SYMB>", "").replace("</SYMB>", "").trim();
 
         if (temp.equals("SIMPLE")) {
+            writer.addString("IF ");
             handleSimple(id);
+            writer.addString(" THEN ");
+            writer.addString("GOTO "+label1+";\n");
+            writer.addString("ELSE ");
+            writer.addString("GOTO "+label2+";\n");
         }
         else {
             handleComposit(id);
+            writer.addString("THEN ");
+            writer.addString("GOTO "+label1+"\n;");
+            writer.addString("ELSE ");
+            writer.addString("GOTO "+label2+";\n");
         }
 
     }
 
-    private void handleSimple(String id) {
+    private String newLabel(){
+        return "L"+counter2.getAndIncrement();
+    }
+
+    private void handleSimple(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleBinops(temp);
-
-        temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
+        String op = handleBinops(temp);
 
 
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleAtomics(temp);
 
-        temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
+        writer.addString(" "+op+" ");
 
-        getToken(temp);
 
         temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleAtomics(temp);
 
-        temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
-
     }
 
-    private void handleComposit(String id) {
+    private void handleComposit(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String[] temp2 = lines;
@@ -228,46 +279,55 @@ public class IntermediateCodeGenerator {
         temp = lines[3].replace("<SYMB>", "").replace("</SYMB>", "").trim();
 
         if (temp.equals("BINOP")){
-            handleBinops(id);
+            String op = handleBinops(id);
             lines = temp2;
             temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
             getToken(temp);
 
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
+
+            String place1 = newVar();
+            writer.addString(place1+" := ");
             handleSimple(temp);
 
-            temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
-
+            String place2 = newVar();
+            writer.addString(place2+" := ");
             temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
             handleSimple(temp);
 
-            temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
+            writer.addString("IF "+place1+" "+op+" "+place2+" ");
 
 
         }
         else{
             handleUnops(id);
             lines = temp2;
-            temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
 
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
             handleSimple(temp);
-
-            temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
         }
 
     }
 
 
-    private int handleLeafs(String id){
+    private int handleLeafs(String id) throws IOException{
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
-            getToken(id);
+            String token = getToken(id);
+
+            if (token.equals("halt")) {
+                writer.addString("STOP");
+            }
+            else if (token.equals("skip")) {
+                writer.addString("REM DO NOTHING");
+            }
+            else if (token.equals("print")) {
+                writer.addString("PRINT ");
+            }
+            else if (token.equals("return")){
+                return 2;
+            }
             return 0;
         }
         
@@ -278,7 +338,7 @@ public class IntermediateCodeGenerator {
                 handleAssignments(id);
                 break;
             case "CALL":
-                handleCalls(id);
+                handleCalls(id, null);
                 break;
             case "BRANCH":
                 handleBranches(id);
@@ -289,16 +349,19 @@ public class IntermediateCodeGenerator {
          
     }
 
-    private void handleFuncs(String id){
+    private void handleFuncs(String id) throws IOException{
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
+            writer.addString("REM END;\n");
             return;
         }
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleDeclarations(temp);
+
+        writer.addString("STOP;\n");
 
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
@@ -319,20 +382,19 @@ public class IntermediateCodeGenerator {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
         String temp = lines[4].replace("<TOKEN>", "").replace("</TOKEN>", "").trim();
 
-        sb.append(temp+" ");
-
         return temp;
     }
 
-    private String handleNames(String id) {
+    private String handleNames(String id){
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        return getToken(temp);       
+        temp = getToken(temp); 
+        return temp; 
 
     }
 
-    private void handleDeclarations(String id) {
+    private void handleDeclarations(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
@@ -343,58 +405,53 @@ public class IntermediateCodeGenerator {
 
         handleBody(temp);
 
-
-
     }
 
-    private void handleHeaders(String id) {
+    private void handleHeaders(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
-        String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
+        String temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleDatatypes(temp);
+        
 
-        temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
+        String name = handleNames(temp);
+        writer.addString("LABEL "+name+";\n");
+        writer.addString("SP := SP - 8 * 8;\n");
+        int from = 32;
 
-        handleNames(temp);
-
-        temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
+        writer.addString("M[SP + "+from+"] := R0;\n");
+        writer.addString("M[SP + "+(from+8)+"] := R1;\n");
+        writer.addString("M[SP + "+(from+16)+"] := R2;\n");
+        writer.addString("M[SP + "+(from+24)+"] := R3;\n");
+    
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        name = handleNames(temp);
 
-        temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
+        writer.addString(name +" := M[SP + "+(from+32)+"];\n");
 
-        getToken(temp);
 
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        name = handleNames(temp);
 
-        temp = lines[11].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
-
+        writer.addString(name +" := M[SP + "+(from+40)+"];\n");
 
         temp = lines[12].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
-
-        temp = lines[13].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
-
+        name = handleNames(temp);
+        writer.addString(name +" := M[SP + "+(from+48)+"];\n");
     }
 
-    private void handleBody(String id) {
+    private void handleBody(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleLogs(temp);
+
+        
 
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
@@ -412,13 +469,9 @@ public class IntermediateCodeGenerator {
 
         handleSubs(temp);
 
-        temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
-
     }
 
-    private void handleSubs(String id){
+    private void handleSubs(String id) throws IOException{
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
@@ -427,16 +480,23 @@ public class IntermediateCodeGenerator {
 
     }
 
-    private void handleLogs(String id){
+    private void handleLogs(String id) throws IOException{
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        getToken(temp);
+        temp = getToken(temp);
+
+        if (temp.equals("{")) {
+            writer.addString("REM BEGIN;\n");
+        }
+        else {
+            writer.addString("REM END;\n");
+        }
 
     }
 
-    private void handleLocals(String id) {
+    private void handleLocals(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
 
@@ -448,58 +508,71 @@ public class IntermediateCodeGenerator {
 
             temp = lines[i+1].replace("<ID>", "").replace("</ID>", "").trim();
 
-            handleNames(temp);
+            String name = handleNames(temp);
 
-            temp = lines[i+2].replace("<ID>", "").replace("</ID>", "").trim();
-
-            getToken(temp);
+            writer.addString(name+" := "+scopeTable.getValue(name)+";\n");
 
         }
 
     }
 
-
-    private void handleCalls(String id) {
+    private void handleCalls(String id, String place) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
+
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        String name = handleNames(temp);
 
+        ArrayList<Identifier> args = scopeTable.getKey(scopes.get(0));
+        scopes.addFirst(name);
+        int k = 0;
+        for (Identifier identifier : args) {
+            if (identifier.id.startsWith("v")) writer.addString("M[SP + 8 * "+(k++)+"] := "+identifier.id+";\n");
+        }
 
-        temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
+        writer.addString("SP := SP - 8 * "+4+";\n");
 
 
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
+        writer.addString("M[SP + 8] := ");
+
         handleAtomics(temp);
 
-        temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
+        writer.addString(";\nM[SP + 16] := ");
 
-        getToken(temp);
 
         temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleAtomics(temp);
 
-        temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
-
-        getToken(temp);
+        writer.addString(";\nM[SP + 24] := ");
 
         temp = lines[11].replace("<ID>", "").replace("</ID>", "").trim();
 
         handleAtomics(temp);
 
-        temp = lines[12].replace("<ID>", "").replace("</ID>", "").trim();
+        String label = newLabel();
+        writer.addString(";\nM[SP] := "+label+";\n");
+        writer.addString("GOTO "+name+";\n");
+        writer.addString("LABEL "+label+";\n");
+        if (place != null) {
+            writer.addString(place+" := M[SP + 8]\n");
+        }
+        writer.addString("SP := SP + 8 * "+4+";\n");
 
-        getToken(temp);
+        k = 0;
+        for (Identifier identifier : args) {
+            if (identifier.id.startsWith("p")) writer.addString(identifier.id+" := M[SP + 8 * "+(k+++"];\n"));
+        }
+
+        scopes.removeFirst();
 
         
     }
 
-    private void handleAtomics(String id) {
+    private void handleAtomics(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
@@ -512,43 +585,75 @@ public class IntermediateCodeGenerator {
 
         if (temp.equals("VNAME")) {
             temp = handleNames(id);
+            writer.addString(temp);
         }
         else {
             temp = handleConstants(id);
+            writer.addString(temp);
         }
 
     }
 
-    private String handleConstants(String id) {
+    private void handleAtomics(String id, String place) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        return getToken(temp);
+        id = temp;
+
+        lines = xpath.evaluate("//UNID[text()='"+temp+"']/..");
+
+        temp = lines[3].replace("<SYMB>", "").replace("</SYMB>", "").trim();
+
+        if (temp.equals("VNAME")) {
+            temp = handleNames(id);
+            writer.addString(place+" := "+temp);
+            writer.addString(";\n");
+        }
+        else {
+            temp = handleConstants(id);
+            writer.addString(place+" := "+temp);
+            writer.addString(";\n");
+        }
+
+    }
+
+    private String handleConstants(String id){
+        String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
+
+        String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
+
+        temp = getToken(temp);
+        
+        return temp;
 
     }
 
 
-    private void handleAssignments(String id) {
+    private void handleAssignments(String id) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
-        String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
+        String id1 = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        handleNames(temp);
+        String temp = handleNames(id1);
 
-        temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
+        String id2 = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
-        temp = getToken(temp);
+        String temp2 = getToken(id2);
 
-        if (temp.equals("=")){
-            temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
-
-            handleTerms(temp);
+        if (temp2.equals("=")){
+            id2 = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
+            String place = newVar();
+            handleTerms(id2, place);
+            writer.addString(temp+" := " + place+";\n");
+        }
+        else {
+            writer.addString("INPUT "+temp+";\n");
         }
    
     }
 
-    private void handleTerms(String id) {
+    private void handleTerms(String id, String place) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
@@ -560,18 +665,18 @@ public class IntermediateCodeGenerator {
         temp = lines[3].replace("<SYMB>", "").replace("</SYMB>", "").trim();
 
         if (temp.equals("ATOMIC")) {
-            handleAtomics(id);
+            handleAtomics(id, place);
         }
         else if (temp.equals("CALL")) {
-            handleCalls(id);
+            handleCalls(id, place);
         }
         else {
-            handleOps(id);
+            handleOps(id, place);
         }
 
     }
 
-    private void handleOps(String id) {
+    private void handleOps(String id, String place) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String[] temp2 = lines;
@@ -585,57 +690,90 @@ public class IntermediateCodeGenerator {
         temp = lines[3].replace("<SYMB>", "").replace("</SYMB>", "").trim();
 
         if (temp.equals("BINOP")){
-            handleBinops(id);
+            String op = handleBinops(id);
             lines = temp2;
-            temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
 
+            String place1 = newVar();
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
-            handleArgs(temp);
+            handleArgs(temp, place1);
 
-            temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
-
+            String place2 = newVar();
             temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
-            handleArgs(temp);
+            handleArgs(temp, place2);
 
-            temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
-
+            writer.addString(place+" := "+place1+" "+op+" "+place2+";\n");
 
         }
         else{
-            handleUnops(id);
+            String op = handleUnops(id);
             lines = temp2;
-            temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
+
+            String place1 = newVar();
 
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
-            handleArgs(temp);
+            handleArgs(temp, place1);
 
-            temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
-            getToken(temp);
+            writer.addString(place+" := "+op+" "+place1+";\n");
         }
 
     }
 
-    private void handleBinops(String id){
+    private String newVar(){
+        return "T"+counter.getAndIncrement();
+    }
+
+    private String handleBinops(String id){
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        getToken(temp);
+        temp = getToken(temp);
+        if (temp.equals("eq")) {
+            temp = "=";
+        }
+        else if (temp.equals("grt")) {
+            temp = ">";
+        }
+        else if (temp.equals("add")) {
+            temp = "+";
+        }
+        else if (temp.equals("sub")) {
+            temp = "-";
+        }
+        else if (temp.equals("mul")) {
+            temp = "*";
+        }
+        else if (temp.equals("div")) {
+            temp = "/";
+        }
+        else if (temp.equals("and")) {
+            temp = "&&";
+        }
+        else if (temp.equals("or")) {
+            temp = "||";
+        }
+     
+        else throw new IllegalArgumentException("Invalid operator: " + temp);
+        return temp;
     }
 
-    private void handleUnops(String id){
+    private String handleUnops(String id){
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
 
-        getToken(temp);
+        temp = getToken(temp);
+
+        if (temp.equals("sqrt")) {
+            temp = "SQR";
+        }
+        else if (temp.equals("not")) {
+            temp = "!";
+        }
+        return temp;
     }
 
-    private void handleArgs(String id) {
+    private void handleArgs(String id, String place) throws IOException {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         String temp = lines[5].replace("<ID>", "").replace("</ID>", "").trim();
@@ -647,10 +785,10 @@ public class IntermediateCodeGenerator {
         temp = lines[3].replace("<SYMB>", "").replace("</SYMB>", "").trim();
 
         if (temp.equals("ATOMIC")) {
-            handleAtomics(id);
+            handleAtomics(id, place);
         }
         else {
-            handleOps(id);
+            handleOps(id, place);
         }
         
 

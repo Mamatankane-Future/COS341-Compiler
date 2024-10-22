@@ -1,26 +1,4 @@
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPathConstants;
 
 
 public class TypeChecker{
@@ -427,6 +405,7 @@ public class TypeChecker{
         name = handleNames(temp);
         type = table.getType(name);
         type = typeOf(type);
+        table.setType(name, type);
 
         if (!type.equals("n")) {
             throw new RuntimeException("Type Error");
@@ -438,6 +417,7 @@ public class TypeChecker{
         name = handleNames(temp);
         type = table.getType(name);
         type = typeOf(type);
+        table.setType(name, type);
 
         if (!type.equals("n")){
             throw new RuntimeException("Type Error");
@@ -450,6 +430,7 @@ public class TypeChecker{
         name = handleNames(temp);
         type = table.getType(name);
         type = typeOf(type);
+        table.setType(name, type);
 
         if (!type.equals("n")){
             throw new RuntimeException("Type Error");

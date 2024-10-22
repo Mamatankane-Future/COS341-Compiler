@@ -20,5 +20,10 @@ public class Main {
         typeChecker.printTable(outfile);
 
 
+        IntermediateCodeGenerator intermediateCodeGenerator = new IntermediateCodeGenerator( outfile, outfile);
+
+        intermediateCodeGenerator.generate();
+
+
     }
 }

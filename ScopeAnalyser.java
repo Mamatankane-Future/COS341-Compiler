@@ -163,6 +163,16 @@ class ScopeTable implements Serializable{
         }
     }
 
+    public ArrayList<Identifier> getKey(String value){
+        for (String key : table.keySet()) {
+            if (table.get(key).get(0).id.equals(value)) {
+                return table.get(key);
+            }
+            
+        }
+        return null;
+    }
+
     public void setType(String id, String type) {
         for (String scope : table.keySet()) {
             for (Identifier identifier : table.get(scope)) {
@@ -188,6 +198,17 @@ class ScopeTable implements Serializable{
             for (Identifier identifier : table.get(scope)) {
                 if (identifier.id.equals(id)) {
                     return identifier.type;
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getValue(String id) {
+        for (String scope : table.keySet()) {
+            for (Identifier identifier : table.get(scope)) {
+                if (identifier.id.equals(id)) {
+                    return identifier.value;
                 }
             }
         }
@@ -292,6 +313,11 @@ public class ScopeAnalyser {
     private void handleS(){
         String temp = xpath.evaluate("//ROOT/CHILDREN/ID/text()")[0];
         scopes.push("global");
+        Identifier identifier = new Identifier();
+        identifier.setName("main");
+        identifier.setType("n");
+        identifier.setId("global");
+        table.insert("global", identifier);
         handleProg(temp);
     }
 
@@ -500,6 +526,12 @@ public class ScopeAnalyser {
         identifier.setName(name);
         identifier.setType(type);
         identifier.setId('v'+temp);
+        if (type.equals("num")){
+            identifier.setValue("0");
+        }
+        else {
+            identifier.setValue("\"\"");
+        }
         table.insert("global", identifier);
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
@@ -590,7 +622,7 @@ public class ScopeAnalyser {
             identifier = new Identifier();
             identifier.setName(name);
             identifier.setType("num");
-            identifier.setId('v'+temp);
+            identifier.setId('p'+temp);
             table.insert(scopes.peek(), identifier);
         }
 
@@ -649,6 +681,12 @@ public class ScopeAnalyser {
             identifier.setName(name);
             identifier.setType(type);
             identifier.setId('v'+temp);
+            if (type.equals("num")){
+                identifier.setValue("0");
+            }
+            else {
+                identifier.setValue("\"\"");
+            }
             table.insert(scopes.peek(), identifier);
         }
 

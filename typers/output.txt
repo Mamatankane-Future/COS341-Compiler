@@ -1,31 +1,32 @@
 Scope: global.F_print.F_print3
 Name: F_print3, Type: v, Value: null, ID: f216
-Name: V_arg1, Type: num, Value: null, ID: v219
-Name: V_arg2, Type: num, Value: null, ID: v222
-Name: V_arg3, Type: num, Value: null, ID: v225
-Name: V_loc1, Type: t, Value: null, ID: v233
-Name: V_loc2, Type: n, Value: null, ID: v238
-Name: V_loc3, Type: n, Value: null, ID: v243
+Name: V_arg1, Type: n, Value: null, ID: p219
+Name: V_arg2, Type: n, Value: null, ID: p222
+Name: V_arg3, Type: n, Value: null, ID: p225
+Name: V_loc1, Type: t, Value: "", ID: v233
+Name: V_loc2, Type: n, Value: 0, ID: v238
+Name: V_loc3, Type: n, Value: 0, ID: v243
 Scope: global.F_print
 Name: F_print, Type: v, Value: null, ID: f125
-Name: V_arg1, Type: num, Value: null, ID: v128
-Name: V_arg2, Type: num, Value: null, ID: v131
-Name: V_arg3, Type: num, Value: null, ID: v134
-Name: V_name, Type: n, Value: null, ID: v142
-Name: V_age2, Type: n, Value: null, ID: v147
-Name: V_many, Type: n, Value: null, ID: v152
+Name: V_arg1, Type: n, Value: null, ID: p128
+Name: V_arg2, Type: n, Value: null, ID: p131
+Name: V_arg3, Type: n, Value: null, ID: p134
+Name: V_name, Type: n, Value: 0, ID: v142
+Name: V_age2, Type: n, Value: 0, ID: v147
+Name: V_many, Type: n, Value: 0, ID: v152
 Name: F_print3, Type: v, Value: null, ID: f216
 Scope: global.F_print3
 Name: F_print3, Type: n, Value: null, ID: f335
-Name: V_arg1, Type: num, Value: null, ID: v338
-Name: V_arg2, Type: num, Value: null, ID: v341
-Name: V_arg3, Type: num, Value: null, ID: v344
-Name: V_name2, Type: t, Value: null, ID: v352
-Name: V_age2, Type: n, Value: null, ID: v357
-Name: V_many, Type: n, Value: null, ID: v362
+Name: V_arg1, Type: n, Value: null, ID: p338
+Name: V_arg2, Type: n, Value: null, ID: p341
+Name: V_arg3, Type: n, Value: null, ID: p344
+Name: V_name2, Type: t, Value: "", ID: v352
+Name: V_age2, Type: n, Value: 0, ID: v357
+Name: V_many, Type: n, Value: 0, ID: v362
 Scope: global
-Name: V_name, Type: t, Value: null, ID: v5
-Name: V_age, Type: n, Value: null, ID: v10
-Name: V_time, Type: n, Value: null, ID: v15
+Name: main, Type: n, Value: null, ID: global
+Name: V_name, Type: t, Value: "", ID: v5
+Name: V_age, Type: n, Value: 0, ID: v10
+Name: V_time, Type: n, Value: 0, ID: v15
 Name: F_print, Type: v, Value: null, ID: f125
 Name: F_print3, Type: n, Value: null, ID: f335
