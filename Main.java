@@ -24,6 +24,10 @@ public class Main {
 
         intermediateCodeGenerator.generate();
 
+        new BasicCode(outfile);
+
+
+
 
     }
 }
