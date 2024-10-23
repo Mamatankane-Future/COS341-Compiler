@@ -1,7 +1,7 @@
 public class Main {
     
     public static void main(String[] args) {
-        String filename = "test5";
+        String filename = "factorial";
         String outfile = "output";
         new TokenStream("in/" + filename + ".txt", outfile);
 

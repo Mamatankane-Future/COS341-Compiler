@@ -11,7 +11,7 @@ class BufferedFileWriter implements AutoCloseable {
     private String filename;
 
     public BufferedFileWriter(String filename) throws IOException {
-        this.filename = "out/" + filename + ".txt"; 
+        this.filename = "out/" + filename + ".txt";
         this.stringBuilder = new StringBuilder();
         (new BufferedWriter(new FileWriter(this.filename))).close();
         this.writer = new BufferedWriter(new FileWriter(this.filename, true));
@@ -154,7 +154,7 @@ public class IntermediateCodeGenerator {
 
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
 
-        writer.addString(";");
+        writer.addString("");
 
         handleInstructions(temp);
 
@@ -172,7 +172,7 @@ public class IntermediateCodeGenerator {
         if (leaf == 0) {
             if (!temp2.equals("</CHILDREN>")) {
                 handleAtomics(temp2);
-                writer.addString("\n");
+                writer.addString(";\n");
             }
         }
 
@@ -180,7 +180,7 @@ public class IntermediateCodeGenerator {
             int from = 32;
             writer.addString("M[SP + "+(from+56)+"] := ");
             handleAtomics(temp2);
-            writer.addString("\n");
+            writer.addString(";\n");
         }
         
     }
@@ -223,14 +223,14 @@ public class IntermediateCodeGenerator {
             writer.addString(" THEN ");
             writer.addString("GOTO "+label1+" ");
             writer.addString("ELSE ");
-            writer.addString("GOTO "+label2+"\n");
+            writer.addString("GOTO "+label2+";\n");
         }
         else {
             handleComposit(id);
             writer.addString("THEN ");
             writer.addString("GOTO "+label1+" ");
             writer.addString("ELSE ");
-            writer.addString("GOTO "+label2+"\n");
+            writer.addString("GOTO "+label2+";\n");
         }
 
     }
@@ -538,12 +538,12 @@ public class IntermediateCodeGenerator {
         if (!currentScope.equals("global")){
             int k = 0;
             for (Identifier identifier : args) {
-                if (identifier.id.startsWith("v")) writer.addString("M[SP + 8 * "+(k++)+"] := "+identifier.id+"\n");
+                if (identifier.id.startsWith("v")) writer.addString("M[SP + 8 * "+(k++)+"] := "+identifier.id+";\n");
             }
         }
 
 
-        writer.addString("SP := SP - 8 * "+4+"\n");
+        writer.addString("SP := SP - 8 * "+4+";\n");
 
 
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
@@ -566,18 +566,18 @@ public class IntermediateCodeGenerator {
         handleAtomics(temp);
 
         String label = newLabel();
-        writer.addString(";\nM[SP] := "+label+"\n");
-        writer.addString("GOTO "+name+"\n");
-        writer.addString("LABEL "+label+"\n");
+        writer.addString(";\nM[SP] := "+label+";\n");
+        writer.addString("GOTO "+name+";\n");
+        writer.addString("LABEL "+label+";\n");
         if (place != null) {
-            writer.addString(place+" := M[SP + 8]\n");
+            writer.addString(place+" := M[SP + 8];\n");
         }
-        writer.addString("SP := SP + 8 * "+4+"\n");
+        writer.addString("SP := SP + 8 * "+4+";\n");
 
         if (!currentScope.equals("global")){
             int k = 0;
             for (Identifier identifier : args) {
-                if (identifier.id.startsWith("p")) writer.addString(identifier.id+" := M[SP + 8 * "+(k+++"]\n"));
+                if (identifier.id.startsWith("p")) writer.addString(identifier.id+" := M[SP + 8 * "+(k+++"];\n"));
             }
         }
 
@@ -659,10 +659,10 @@ public class IntermediateCodeGenerator {
             id2 = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
             String place = newVar();
             handleTerms(id2, place);
-            writer.addString(temp+" := " + place+"\n");
+            writer.addString(temp+" := " + place+";\n");
         }
         else {
-            writer.addString("INPUT "+temp+"\n");
+            writer.addString("INPUT "+temp+";\n");
         }
    
     }

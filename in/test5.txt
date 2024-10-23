@@ -2,7 +2,8 @@ main
 num V_number,
 
 begin
-V_number = add(0.03 , 2 );  
+V_number = add(0.03 , 2 ); 
+print V_number; 
 end
 num F_test(V_first, V_second, V_third){
 text V_t1,

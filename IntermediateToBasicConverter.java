@@ -27,6 +27,10 @@ public class IntermediateToBasicConverter {
             basicCode = "LET " + parts[0] + "$ = " + parts[1];
             stringList.add(parts[0]);
         }
+        else if (intermediateLine.matches("([a-zA-Z][a-zA-Z0-9]*) := ([0-9]+\\.[0-9]+)")) {
+            String[] parts = intermediateLine.split(" := ");
+            basicCode = "LET " + parts[0] + " = " + parts[1];
+        } 
         else if (intermediateLine.matches("([a-zA-Z][a-zA-Z0-9]*) := ([a-zA-Z0-9]+)")) {
             String[] parts = intermediateLine.split(" := ");
             if (!stringList.contains(parts[1])) basicCode = "LET " + parts[0] + " = " + parts[1];
@@ -47,7 +51,7 @@ public class IntermediateToBasicConverter {
             basicCode = parts[0] +" = SQR(" +part1[1]+")";
         }
         else if (intermediateLine.startsWith("STOP")){
-            basicCode = intermediateLine;
+            basicCode = "END";
         }
         else if (intermediateLine.startsWith("REM")){
             basicCode = intermediateLine;
@@ -87,7 +91,7 @@ public class IntermediateToBasicConverter {
                 String thenLabel = matcher.group(4);
                 String elseLabel = matcher.group(5);
                 
-                basicCode = "IF NOT " + conditionVar + " " + operator + " " + value + " THEN GOTO " + thenLabel + " ELSE GOTO " + elseLabel;
+                basicCode = "IF NOT " + conditionVar + " " + operator + " " + value + " THEN GOTO " + thenLabel + " ELSE GOTO " + elseLabel + " FI";
                 
             }
         }
@@ -101,7 +105,7 @@ public class IntermediateToBasicConverter {
                 String thenLabel = matcher.group(4);
                 String elseLabel = matcher.group(5);
                 
-                basicCode = "IF NOT " + conditionVar + " " + operator + " " + value + " THEN GOTO " + thenLabel + " ELSE GOTO " + elseLabel;
+                basicCode = "IF " + conditionVar + " " + operator + " " + value + " THEN GOTO " + thenLabel + " ELSE GOTO " + elseLabel + " FI";
             }
         }        
         else if (intermediateLine.matches("GOTO ([a-zA-Z0-9]+)")) {
@@ -123,7 +127,7 @@ public class IntermediateToBasicConverter {
         }
         else if (intermediateLine.matches("INPUT ([a-zA-Z0-9]+)")){
             String[] parts = intermediateLine.split(" ");
-            basicCode = parts[0] + " \"Please enter number: \", " + parts[1];
+            basicCode = parts[0] + " \"Please enter number: \" " + parts[1];
 
         }
         else if (intermediateLine.equals("GOTO M[SP]")) {
