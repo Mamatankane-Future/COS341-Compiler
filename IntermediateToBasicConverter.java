@@ -92,7 +92,7 @@ public class IntermediateToBasicConverter {
 
             lineNumbers.put(parts[1], String.valueOf(i.get()));
 
-            if (parts[1].startsWith("GOTO f")) {
+            if (parts[1].startsWith("f")) {
                 basicCode = i.get()+" REM "+intermediateLine;
                 i.set(i.get()+10);
                 basicCode+= "\n"+i.get()+" f = f + 1";
@@ -250,7 +250,7 @@ public class IntermediateToBasicConverter {
             AtomicInteger i = new AtomicInteger(30);
 
             // Second pass through the file
-            writer.write("10 DIM M(7, 30)\n20 f = 0");
+            writer.write("10 DIM M(7, 100)\n20 f = 0");
             writer.newLine();
             while ((line = reader.readLine()) != null) {
                 line = line.replace(";", "");
