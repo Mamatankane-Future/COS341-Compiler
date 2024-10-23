@@ -6,10 +6,54 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.concurrent.atomic.AtomicReference;
+
+class AtomicCharacter {
+    private final AtomicReference<Character> atomicChar;
+
+    public AtomicCharacter(char initialValue) {
+        atomicChar = new AtomicReference<>(initialValue);
+    }
+
+    public Character get() {
+        return atomicChar.get();
+    }
+
+    public Character getAndIncrement() {
+        return atomicChar.getAndUpdate(this::incrementChar);
+    }
+
+    public Character incrementAndGet() {
+        return atomicChar.updateAndGet(this::incrementChar);
+    }
+
+    private Character incrementChar(Character current) {
+        if (current == null){
+            throw new RuntimeException("Too many string variables");
+        }
+        if (current == 'Z') {
+            return null; // Return null instead of wrapping around
+        }
+        return (char) (current + 1);
+    }
+
+    public void set(char newValue) {
+        atomicChar.set(newValue);
+    }
+
+    public Character getAndSet(char newValue) {
+        return atomicChar.getAndSet(newValue);
+    }
+}
+
+
 public class IntermediateToBasicConverter {
 
     ArrayList<String> stringList = new ArrayList<>();
     HashMap<String, String> lineNumbers = new HashMap<>();
+    HashMap<String, Character> strings = new HashMap<>();
+    AtomicCharacter atomicChar = new AtomicCharacter('A');
+    
 
     // Converts an intermediate line to BASIC code
     private String convertLine(String intermediateLine, AtomicInteger i) {
@@ -19,11 +63,13 @@ public class IntermediateToBasicConverter {
         if (intermediateLine.startsWith("PRINT")){
             String[] parts = intermediateLine.split(" ");
             if (!stringList.contains(parts[1])) basicCode = intermediateLine;
-            else basicCode = parts[0] + " " + parts[1] + "$";
+            else basicCode = parts[0] + " " + strings.get(parts[1]) + "$";
         }
         else if (intermediateLine.matches("([a-zA-Z][a-zA-Z0-9]*) := \"([a-zA-Z0-9]*)\"")){
             String[] parts = intermediateLine.split(" := ");
-            basicCode = "LET " + parts[0] + "$ = " + parts[1];
+            Character c = atomicChar.getAndIncrement();
+            basicCode = "LET " + c + "$ = " + parts[1];
+            strings.put(parts[0], c);
             stringList.add(parts[0]);
         }
         else if (intermediateLine.matches("([a-zA-Z][a-zA-Z0-9]*) := ([0-9]+\\.[0-9]+)")) {
