@@ -176,8 +176,7 @@ public class IntermediateCodeGenerator {
         }
 
         if (leaf == 2) {
-            int from = 32;
-            writer.addString("M[SP + "+(from+56)+"] := ");
+            writer.addString("M[SP + 88] := ");
             handleAtomics(temp2);
             writer.addString(";\n");
         }
@@ -414,8 +413,8 @@ public class IntermediateCodeGenerator {
 
         String name = handleNames(temp);
         writer.addString("LABEL "+name+"\n");
-        writer.addString("SP := SP - 8 * 8\n");
-        int from = 32;
+        writer.addString("SP := SP - 80\n");
+        int from = 48;
 
         writer.addString("M[SP + "+from+"] := R0\n");
         writer.addString("M[SP + "+(from+8)+"] := R1\n");
@@ -427,19 +426,19 @@ public class IntermediateCodeGenerator {
 
         name = handleNames(temp);
 
-        writer.addString(name +" := M[SP + "+(from+32)+"]\n");
+        writer.addString(name +" := M[SP + "+(from+40)+"]\n");
 
 
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
 
-        writer.addString(name +" := M[SP + "+(from+40)+"]\n");
+        writer.addString(name +" := M[SP + "+(from+48)+"]\n");
 
         temp = lines[12].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
-        writer.addString(name +" := M[SP + "+(from+48)+"]\n");
+        writer.addString(name +" := M[SP + "+(from+56)+"]\n");
     }
 
     private void handleBody(String id) throws IOException {
@@ -489,14 +488,15 @@ public class IntermediateCodeGenerator {
             writer.addString("REM BEGIN\n");
         }
         else {
-            int from = 32;
+            int from = 48;
             writer.addString("R0 := M[SP + "+from+"]\n");
             writer.addString("R1 := M[SP + "+(from+8)+"]\n");
             writer.addString("R2 := M[SP + "+(from+16)+"]\n");
             writer.addString("R3 := M[SP + "+(from+24)+"]\n");
-            writer.addString("SP := SP + 8 * 8\n");
+            writer.addString("SP := SP + 80\n");
             writer.addString("GOTO M[SP]\n");
             writer.addString("REM END\n");
+            scopes.removeFirst();
         }
 
     }
@@ -538,7 +538,7 @@ public class IntermediateCodeGenerator {
         if (!currentScope.equals("global")){
             int k = 0;
             for (Identifier identifier : args) {
-                if (identifier.id.startsWith("v")) writer.addString("M[SP + 8 * "+(k++)+"] := "+identifier.id+";\n");
+                if (identifier.id.startsWith("v") || identifier.id.startsWith("p") ) writer.addString("M[SP + 8 * "+(k++)+"] := "+identifier.id+";\n");
             }
         }
 
@@ -577,11 +577,9 @@ public class IntermediateCodeGenerator {
         if (!currentScope.equals("global")){
             int k = 0;
             for (Identifier identifier : args) {
-                if (identifier.id.startsWith("p")) writer.addString(identifier.id+" := M[SP + 8 * "+(k+++"];\n"));
+                if (identifier.id.startsWith("p") || identifier.id.startsWith("v")) writer.addString(identifier.id+" := M[SP + 8 * "+(k+++"];\n"));
             }
         }
-
-        scopes.removeFirst();
 
         
     }

@@ -16,14 +16,14 @@ PRINT v5;
 REM END
 STOP
 LABEL f67
-SP := SP - 8 * 8
-M[SP + 32] := R0
-M[SP + 40] := R1
-M[SP + 48] := R2
-M[SP + 56] := R3
-p70 := M[SP + 64]
-p73 := M[SP + 72]
-p76 := M[SP + 80]
+SP := SP - 80
+M[SP + 48] := R0
+M[SP + 56] := R1
+M[SP + 64] := R2
+M[SP + 72] := R3
+p70 := M[SP + 88]
+p73 := M[SP + 96]
+p76 := M[SP + 104]
 REM BEGIN
 v84 := 0
 v89 := 0
@@ -38,6 +38,12 @@ T2 := p70
 T3 := 1
 T1 := T2 - T3
 v84 := T1;
+M[SP + 8 * 0] := p70;
+M[SP + 8 * 1] := p73;
+M[SP + 8 * 2] := p76;
+M[SP + 8 * 3] := v84;
+M[SP + 8 * 4] := v89;
+M[SP + 8 * 5] := v94;
 SP := SP - 8 * 4;
 M[SP + 8] := v84;
 M[SP + 16] := 0;
@@ -47,6 +53,12 @@ GOTO f67;
 LABEL L4;
 T4 := M[SP + 8];
 SP := SP + 8 * 4;
+p70 := M[SP + 8 * 0];
+p73 := M[SP + 8 * 1];
+p76 := M[SP + 8 * 2];
+v84 := M[SP + 8 * 3];
+v89 := M[SP + 8 * 4];
+v94 := M[SP + 8 * 5];
 v89 := T4;
 T6 := v89
 T7 := p70
@@ -56,11 +68,11 @@ M[SP + 88] := v94;
 REM END
 LABEL L3
 REM END
-R0 := M[SP + 32]
-R1 := M[SP + 40]
-R2 := M[SP + 48]
-R3 := M[SP + 56]
-SP := SP + 8 * 8
+R0 := M[SP + 48]
+R1 := M[SP + 56]
+R2 := M[SP + 64]
+R3 := M[SP + 72]
+SP := SP + 80
 GOTO M[SP]
 REM END
 REM END

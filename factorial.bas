@@ -4,21 +4,21 @@
 40 LET v10 = 0
 50 PRINT "Factorial"
 60 INPUT "Please enter number: " v10
-70 M(1, f) = v10
-80 M(2, f) = 0
-90 M(3, f) = 0
+70 M(1, f + 1) = v10
+80 M(2, f + 1) = 0
+90 M(3, f + 1) = 0
 100 GOSUB 170
 110 REM LABEL L0
-120 LET T0 = M(0, f)
+120 T0 = M(0, f)
 130 LET v5 = T0
 140 PRINT v5
 150 REM END
 160 END
 170 REM LABEL f67
-180 f = f + 1
-190 p70 = M(1, f - 1)
-200 p73 = M(2, f - 1)
-210 p76 = M(3, f - 1)
+180 SP = SP - 80
+190 p70 = M(1, f)
+200 p73 = M(2, f)
+210 p76 = M(3, f)
 220 REM BEGIN
 230 LET v84 = 0
 240 LET v89 = 0
@@ -27,30 +27,43 @@
 270 REM LABEL L1
 280 M(0, f - 1) = 1
 290 REM END
-300 GOTO 490
+300 GOTO 610
 310 REM LABEL L2
 320 LET T2 = p70
 330 LET T3 = 1
 340 T1 = T2 - T3
 350 LET v84 = T1
-360 M(1, f) = v84
-370 M(2, f) = 0
-380 M(3, f) = 0
-390 GOSUB 170
-400 REM LABEL L4
-410 LET T4 = M(0, f)
-420 LET v89 = T4
-430 LET T6 = v89
-440 LET T7 = p70
-450 T5 = T6 * T7
-460 LET v94 = T5
-470 M(0, f - 1) = v94
-480 REM END
-490 REM LABEL L3
-500 REM END
-510 f = f - 1
-520 RETURN
-530 REM END
-540 REM END
-550 END
-560 REM END
+360 M(1, f) = p70
+370 M(2, f) = p73
+380 M(3, f) = p76
+390 M(4, f) = v84
+400 M(5, f) = v89
+410 M(6, f) = v94
+420 M(1, f + 1) = v84
+430 M(2, f + 1) = 0
+440 M(3, f + 1) = 0
+450 GOSUB 170
+460 REM LABEL L4
+470 T4 = M(0, f)
+480 p70 = M(1, f)
+490 p73 = M(2, f)
+500 p76 = M(3, f)
+510 v84 = M(4, f)
+520 v89 = M(5, f)
+530 v94 = M(6, f)
+540 LET v89 = T4
+550 LET T6 = v89
+560 LET T7 = p70
+570 T5 = T6 * T7
+580 LET v94 = T5
+590 M(0, f - 1) = v94
+600 REM END
+610 REM LABEL L3
+620 REM END
+630 SP = SP + 80
+640 f = f - 1
+650 RETURN
+660 REM END
+670 REM END
+680 END
+690 REM END

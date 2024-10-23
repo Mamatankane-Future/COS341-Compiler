@@ -10,7 +10,6 @@ public class IntermediateToBasicConverter {
 
     ArrayList<String> stringList = new ArrayList<>();
     HashMap<String, String> lineNumbers = new HashMap<>();
-    int ps = 1;
 
     // Converts an intermediate line to BASIC code
     private String convertLine(String intermediateLine, AtomicInteger i) {
@@ -56,32 +55,6 @@ public class IntermediateToBasicConverter {
         else if (intermediateLine.startsWith("REM")){
             basicCode = intermediateLine;
         }
-        else if (intermediateLine.endsWith("M[SP + 8]")){
-            String[] parts = intermediateLine.split(" := ");
-            basicCode = "LET " + parts[0]+" = M(0, f)";
-        }
-        else if (intermediateLine.startsWith("p")){
-            String[] parts = intermediateLine.split(" := ");
-            basicCode = parts[0] + " = M("+ps+ ", f - 1)";
-            ps++;
-            if (ps>=4) ps = 1;
-        }
-        else if (intermediateLine.startsWith("M[SP + 88]")){
-            String[] parts = intermediateLine.split(" := ");
-            basicCode = "M(0, f - 1) = "+parts[1];
-        }
-        else if (intermediateLine.startsWith("M[SP + 8]")){
-            String[] parts = intermediateLine.split(" := ");
-            basicCode = "M(1, f) = "+parts[1];
-        }
-        else if (intermediateLine.startsWith("M[SP + 16]")){
-            String[] parts = intermediateLine.split(" := ");
-            basicCode = "M(2, f) = "+parts[1];
-        }
-        else if (intermediateLine.startsWith("M[SP + 24]")){
-            String[] parts = intermediateLine.split(" := ");
-            basicCode = "M(3, f) = "+parts[1];
-        }
         else if (intermediateLine.matches("IF\\s*!\\s*([a-zA-Z0-9]+)\\s*(=|>)\\s*([a-zA-Z0-9]+)\\s*THEN\\s*GOTO\\s*([a-zA-Z0-9]+)\\s*ELSE\\s*GOTO\\s*([a-zA-Z0-9]+)")) {
             Matcher matcher = Pattern.compile("IF\\s*!\\s*([a-zA-Z0-9]+)\\s*(=|>)\\s*([a-zA-Z0-9]+)\\s*THEN\\s*GOTO\\s*([a-zA-Z0-9]+)\\s*ELSE\\s*GOTO\\s*([a-zA-Z0-9]+)").matcher(intermediateLine);
             if (matcher.find()) {
@@ -119,7 +92,7 @@ public class IntermediateToBasicConverter {
 
             lineNumbers.put(parts[1], String.valueOf(i.get()));
 
-            if (parts[1].startsWith("f")) {
+            if (parts[1].startsWith("GOTO f")) {
                 basicCode = i.get()+" REM "+intermediateLine;
                 i.set(i.get()+10);
                 basicCode+= "\n"+i.get()+" f = f + 1";
@@ -135,8 +108,137 @@ public class IntermediateToBasicConverter {
             i.set(i.get()+10);
             basicCode+=i.get()+" RETURN";
         }
+        else {
+            basicCode = storingPars(intermediateLine);
+        }
 
         return basicCode;
+    }
+
+    private String storingPars(String intermediateLine){
+        if (intermediateLine.startsWith("M[SP + 8]")){
+            String[] parts = intermediateLine.split(" := ");
+
+            return "M(1, f + 1) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 16]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(2, f + 1) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 24]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(3, f + 1) = " + parts[1];
+        }
+        else {
+            return retrievingPars(intermediateLine);
+        }
+    }
+
+    private String retrievingPars(String intermediateLine){
+        if (intermediateLine.endsWith("M[SP + 88]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(1, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 96]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(2, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 104]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(3, f)";
+        }
+        else {
+            return storingLocals(intermediateLine);
+        }
+    }
+
+    private String storingLocals(String intermediateLine){
+        if (intermediateLine.startsWith("M[SP + 8 * 0]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(1, f) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 8 * 1]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(2, f) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 8 * 2]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(3, f) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 8 * 3]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(4, f) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 8 * 4]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(5, f) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 8 * 5]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(6, f) = " + parts[1];
+        }
+        else if (intermediateLine.startsWith("M[SP + 8 * 6]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(7, f) = " + parts[1];
+        }
+        else {
+            return retrievingLocals(intermediateLine);
+        }
+    }
+
+    private String retrievingLocals(String intermediateLine){
+        if (intermediateLine.endsWith("M[SP + 8 * 0]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(1, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 8 * 1]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(2, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 8 * 2]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(3, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 8 * 3]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(4, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 8 * 4]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(5, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 8 * 5]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(6, f)";
+        }
+        else if (intermediateLine.endsWith("M[SP + 8 * 6]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(7, f)";
+        }
+        else {
+            return storingResult(intermediateLine);
+        }
+    }
+
+    private String storingResult(String intermediateLine){
+        if (intermediateLine.startsWith("M[SP + 88]")){
+            String[] parts = intermediateLine.split(" := ");
+            return "M(0, f - 1) = " + parts[1];
+        }
+        else {
+            return retrievingResult(intermediateLine);
+        }
+       
+    }
+
+    private String retrievingResult(String intermediateLine){
+        if (intermediateLine.endsWith("M[SP + 8]")){
+            String[] parts = intermediateLine.split(" := ");
+            return parts[0] + " = M(0, f)";
+        }
+        else {
+            return "";
+        }
     }
 
     // Reads from input file and converts to BASIC code in output file
