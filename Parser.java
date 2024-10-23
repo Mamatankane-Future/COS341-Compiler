@@ -278,7 +278,6 @@ class DeserializeParser {
 
 
         if (inputStream == null) {
-            System.err.println("Unable to find parse_table.ser");
             throw new RuntimeException("Unable to find parse_table.ser");
         }
 

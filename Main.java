@@ -13,11 +13,8 @@ public class Main {
             // Step 2: Create the 'lib' directory if it doesn't exist
             Path libDir = Paths.get("lib");
             if (!Files.exists(libDir)) {
-                Files.createDirectory(libDir);  // Creates the lib directory
-                System.out.println("Created 'lib' directory.");
-            } else {
-                System.out.println("'lib' directory already exists.");
-            }
+                Files.createDirectory(libDir); 
+            } 
 
             System.out.println("Lexical Analysis...");
             new TokenStream(infile + ".txt", "lib/lexer.xml");

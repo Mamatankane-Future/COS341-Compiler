@@ -1,6 +1,7 @@
 # Compiler Project
 
 This project is a compiler that processes a source code file written in a RecSPL. The compiler performs lexical analysis, parsing, scope and semantic analysis, type checking, and generates an intermediate representation in BASIC.
+Source files: https://github.com/Mamatankane-Future/COS341-Compiler
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -26,7 +27,7 @@ To run the program, ensure that the input file is in the same directory as `comp
    ```
 
 2. **Input File**:
-   When prompted, enter the name of the input file without the extension (e.g., `example` for `example.txt`).
+   When prompted, enter the name of the input file without the extension (e.g., `example`).
 
 ## Output Files
 
@@ -45,4 +46,5 @@ After running the program, the following output files and directories will be ge
 
 - Ensure the input file is correctly formatted and placed in the same directory as `compiler.jar`.
 - The generated files in the `lib` directory are crucial for understanding the compilation process.
-- The **<filename>.bas** will be generated in the same directory as `compiler.jar`
+- The **<filename>.bas** will be generated in the same directory as `compiler.jar`.
+- Please dont add any return command if the function's return type is `void`.

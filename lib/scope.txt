@@ -1,12 +1,11 @@
-Scope: global.F_factorial
-Name: F_factorial, Type: n, Value: null, ID: f67
-Name: V_arg1, Type: num, Value: null, ID: p70
-Name: V_arg2, Type: num, Value: null, ID: p73
-Name: V_arg3, Type: num, Value: null, ID: p76
-Name: V_loc1, Type: num, Value: 0, ID: v84
-Name: V_loc2, Type: num, Value: 0, ID: v89
-Name: V_loc3, Type: num, Value: 0, ID: v94
+Scope: global.F_test
+Name: F_test, Type: n, Value: null, ID: f38
+Name: V_first, Type: num, Value: null, ID: p41
+Name: V_second, Type: num, Value: null, ID: p44
+Name: V_third, Type: num, Value: null, ID: p47
+Name: V_t1, Type: text, Value: "", ID: v55
+Name: V_t2, Type: text, Value: "", ID: v60
+Name: V_t3, Type: text, Value: "", ID: v65
 Scope: global
-Name: V_result, Type: num, Value: 0, ID: v5
-Name: V_number, Type: num, Value: 0, ID: v10
-Name: F_factorial, Type: n, Value: null, ID: f67
+Name: V_number, Type: num, Value: 0, ID: v5
+Name: F_test, Type: n, Value: null, ID: f38

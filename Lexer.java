@@ -175,14 +175,15 @@ public class Lexer {
             StringBuilder content = new StringBuilder();
             Files.lines(filePath).forEach(line -> content.append(line).append(" "));
             try {
+                if (content.toString().strip().isEmpty()) {
+                    throw new RuntimeException("Empty file!!!");
+                }
                 allTokens = lex(content.toString());
             } catch (RuntimeException e) {
-                System.err.println("Error lexing file content.");
-                e.printStackTrace();
+                throw new RuntimeException("Error lexing file content: " + filename + "\n" + e.getMessage());
             }
         } catch (IOException e) {
-            System.err.println("Error reading file: " + filename);
-            e.printStackTrace();
+            throw new RuntimeException("Error reading file: " + filename + "\n" + e.getMessage());
         }
 
         return allTokens;

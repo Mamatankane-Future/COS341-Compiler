@@ -75,7 +75,6 @@ public class IntermediateCodeGenerator {
         try {
             handleS();
             writer.flush();
-            System.out.println("Intermediate code generated successfully");
         } catch (Exception e) {
             e.printStackTrace();
         }
