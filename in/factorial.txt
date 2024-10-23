@@ -1,0 +1,31 @@
+main
+    num V_result,
+    num V_number,
+
+    begin
+        print "Factorial";
+        V_number <input;
+        V_result = F_factorial(V_number, 0, 0);
+        print V_result;
+    end
+
+    num F_factorial(V_arg1, V_arg2, V_arg3)
+    {
+        num V_loc1,
+        num V_loc2,
+        num V_loc3,
+
+        begin
+            if eq(V_arg1, 1) then begin
+                return 1;
+            end
+            else begin
+                V_loc1 = sub(V_arg1, 1);
+                V_loc2 = F_factorial(V_loc1, 0, 0);
+                V_loc3 = mul(V_loc2, V_arg1);
+                return V_loc3;
+            end;
+        end
+    }
+
+    end

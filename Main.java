@@ -1,7 +1,7 @@
 public class Main {
     
     public static void main(String[] args) {
-        String filename = "test3";
+        String filename = "test5";
         String outfile = "output";
         new TokenStream("in/" + filename + ".txt", outfile);
 
@@ -24,7 +24,8 @@ public class Main {
 
         intermediateCodeGenerator.generate();
 
-        new BasicCode(outfile);
+        IntermediateToBasicConverter intermediateToBasicConverter = new IntermediateToBasicConverter();
+        intermediateToBasicConverter.convert();
 
 
 

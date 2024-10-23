@@ -313,11 +313,6 @@ public class ScopeAnalyser {
     private void handleS(){
         String temp = xpath.evaluate("//ROOT/CHILDREN/ID/text()")[0];
         scopes.push("global");
-        Identifier identifier = new Identifier();
-        identifier.setName("main");
-        identifier.setType("n");
-        identifier.setId("global");
-        table.insert("global", identifier);
         handleProg(temp);
     }
 

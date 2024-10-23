@@ -570,7 +570,7 @@ public class TypeChecker{
         else {
             temp = handleConstants(id);
             String alphabeticPattern = "^\"[a-zA-Z]+\"$";
-            String numericPattern = "^[0-9]+$";
+            String numericPattern = "^[0-9]+(\\.[0-9]+)?$";
             if (temp.matches(alphabeticPattern)) return "t";
             if (temp.matches(numericPattern)) return "n";
         }

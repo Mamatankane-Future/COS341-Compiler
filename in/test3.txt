@@ -7,10 +7,13 @@ main
         print 2025;
         print V_age;
         V_time <input;
+        print "Hello";
         V_age = sub(2024,2003);
         V_name = "Future";
+        print V_name;
         F_print(11 , V_age, 2);
         V_age = F_print3(11 , V_age, 2);
+        print V_age;
     end
 
     void F_print(V_arg1, V_arg2, V_arg3)
@@ -35,8 +38,9 @@ main
             
             begin
                 if not(eq(V_arg3, 0)) then 
-                    begin 
+                    begin
                         V_loc2 = sub(V_arg3, 1);
+                        print V_loc2;
                         F_print3(V_arg1, V_arg2, V_loc2);
                     end
                 else
@@ -58,6 +62,7 @@ main
         
         begin
             V_many = sqrt(4);
+            print V_many;
             return V_arg2;
         end
     }

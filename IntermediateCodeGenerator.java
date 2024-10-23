@@ -103,7 +103,7 @@ public class IntermediateCodeGenerator {
 
         handleAlgos(temp);
 
-        writer.addString("STOP;\n");
+        writer.addString("STOP\n");
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
@@ -123,7 +123,7 @@ public class IntermediateCodeGenerator {
 
         String name = handleNames(temp);
 
-        writer.addString(name+" := "+scopeTable.getValue(name)+";\n");
+        writer.addString(name+" := "+scopeTable.getValue(name)+"\n");
     
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
@@ -144,7 +144,7 @@ public class IntermediateCodeGenerator {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
-            writer.addString("REM END;\n");
+            writer.addString("REM END\n");
             return;
         }
 
@@ -153,6 +153,8 @@ public class IntermediateCodeGenerator {
         handleCommands(temp);
 
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
+
+        writer.addString(";");
 
         handleInstructions(temp);
 
@@ -170,21 +172,15 @@ public class IntermediateCodeGenerator {
         if (leaf == 0) {
             if (!temp2.equals("</CHILDREN>")) {
                 handleAtomics(temp2);
-                writer.addString(";\n");
+                writer.addString("\n");
             }
         }
 
         if (leaf == 2) {
-            handleAtomics(temp2);
             int from = 32;
-            writer.addString(":= M[SP + "+(from+56)+"];\n");
-
-            writer.addString("R0 := M[SP + "+from+"];\n");
-            writer.addString("R1 := M[SP + "+(from+8)+"];\n");
-            writer.addString("R2 := M[SP + "+(from+16)+"];\n");
-            writer.addString("R3 := M[SP + "+(from+24)+"];\n");
-            writer.addString("SP := SP + 8 * 8;\n");
-            writer.addString("GOTO M[SP];\n");
+            writer.addString("M[SP + "+(from+56)+"] := ");
+            handleAtomics(temp2);
+            writer.addString("\n");
         }
         
     }
@@ -200,12 +196,12 @@ public class IntermediateCodeGenerator {
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
-        writer.addString("LABEL "+label1+";\n");
+        writer.addString("LABEL "+label1+"\n");
         handleAlgos(temp);
 
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
-        writer.addString("LABEL "+label2+";\n");
+        writer.addString("LABEL "+label2+"\n");
         handleAlgos(temp);
 
     }
@@ -227,14 +223,14 @@ public class IntermediateCodeGenerator {
             writer.addString(" THEN ");
             writer.addString("GOTO "+label1+" ");
             writer.addString("ELSE ");
-            writer.addString("GOTO "+label2+";\n");
+            writer.addString("GOTO "+label2+"\n");
         }
         else {
             handleComposit(id);
             writer.addString("THEN ");
             writer.addString("GOTO "+label1+" ");
             writer.addString("ELSE ");
-            writer.addString("GOTO "+label2+";\n");
+            writer.addString("GOTO "+label2+"\n");
         }
 
     }
@@ -355,7 +351,7 @@ public class IntermediateCodeGenerator {
         String[] lines = xpath.evaluate("//UNID[text()='"+id+"']/..");
 
         if (lines[0].trim().equals( "<LEAF>")) {
-            writer.addString("REM END;\n");
+            writer.addString("REM END\n");
             return;
         }
 
@@ -363,7 +359,7 @@ public class IntermediateCodeGenerator {
 
         handleDeclarations(temp);
 
-        writer.addString("STOP;\n");
+        writer.addString("STOP\n");
 
         temp = lines[6].replace("<ID>", "").replace("</ID>", "").trim();
 
@@ -417,33 +413,33 @@ public class IntermediateCodeGenerator {
         
 
         String name = handleNames(temp);
-        writer.addString("LABEL "+name+";\n");
-        writer.addString("SP := SP - 8 * 8;\n");
+        writer.addString("LABEL "+name+"\n");
+        writer.addString("SP := SP - 8 * 8\n");
         int from = 32;
 
-        writer.addString("M[SP + "+from+"] := R0;\n");
-        writer.addString("M[SP + "+(from+8)+"] := R1;\n");
-        writer.addString("M[SP + "+(from+16)+"] := R2;\n");
-        writer.addString("M[SP + "+(from+24)+"] := R3;\n");
+        writer.addString("M[SP + "+from+"] := R0\n");
+        writer.addString("M[SP + "+(from+8)+"] := R1\n");
+        writer.addString("M[SP + "+(from+16)+"] := R2\n");
+        writer.addString("M[SP + "+(from+24)+"] := R3\n");
     
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
 
-        writer.addString(name +" := M[SP + "+(from+32)+"];\n");
+        writer.addString(name +" := M[SP + "+(from+32)+"]\n");
 
 
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
 
-        writer.addString(name +" := M[SP + "+(from+40)+"];\n");
+        writer.addString(name +" := M[SP + "+(from+40)+"]\n");
 
         temp = lines[12].replace("<ID>", "").replace("</ID>", "").trim();
 
         name = handleNames(temp);
-        writer.addString(name +" := M[SP + "+(from+48)+"];\n");
+        writer.addString(name +" := M[SP + "+(from+48)+"]\n");
     }
 
     private void handleBody(String id) throws IOException {
@@ -490,10 +486,17 @@ public class IntermediateCodeGenerator {
         temp = getToken(temp);
 
         if (temp.equals("{")) {
-            writer.addString("REM BEGIN;\n");
+            writer.addString("REM BEGIN\n");
         }
         else {
-            writer.addString("REM END;\n");
+            int from = 32;
+            writer.addString("R0 := M[SP + "+from+"]\n");
+            writer.addString("R1 := M[SP + "+(from+8)+"]\n");
+            writer.addString("R2 := M[SP + "+(from+16)+"]\n");
+            writer.addString("R3 := M[SP + "+(from+24)+"]\n");
+            writer.addString("SP := SP + 8 * 8\n");
+            writer.addString("GOTO M[SP]\n");
+            writer.addString("REM END\n");
         }
 
     }
@@ -512,7 +515,7 @@ public class IntermediateCodeGenerator {
 
             String name = handleNames(temp);
 
-            writer.addString(name+" := "+scopeTable.getValue(name)+";\n");
+            writer.addString(name+" := "+scopeTable.getValue(name)+"\n");
 
         }
 
@@ -526,14 +529,21 @@ public class IntermediateCodeGenerator {
 
         String name = handleNames(temp);
 
-        ArrayList<Identifier> args = scopeTable.getKey(scopes.get(0));
+        String currentScope = scopes.get(0);
+
         scopes.addFirst(name);
-        int k = 0;
-        for (Identifier identifier : args) {
-            if (identifier.id.startsWith("v")) writer.addString("M[SP + 8 * "+(k++)+"] := "+identifier.id+";\n");
+
+        ArrayList<Identifier> args = scopeTable.getKey(scopes.get(0));
+
+        if (!currentScope.equals("global")){
+            int k = 0;
+            for (Identifier identifier : args) {
+                if (identifier.id.startsWith("v")) writer.addString("M[SP + 8 * "+(k++)+"] := "+identifier.id+"\n");
+            }
         }
 
-        writer.addString("SP := SP - 8 * "+4+";\n");
+
+        writer.addString("SP := SP - 8 * "+4+"\n");
 
 
         temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
@@ -556,17 +566,19 @@ public class IntermediateCodeGenerator {
         handleAtomics(temp);
 
         String label = newLabel();
-        writer.addString(";\nM[SP] := "+label+";\n");
-        writer.addString("GOTO "+name+";\n");
-        writer.addString("LABEL "+label+";\n");
+        writer.addString(";\nM[SP] := "+label+"\n");
+        writer.addString("GOTO "+name+"\n");
+        writer.addString("LABEL "+label+"\n");
         if (place != null) {
             writer.addString(place+" := M[SP + 8]\n");
         }
-        writer.addString("SP := SP + 8 * "+4+";\n");
+        writer.addString("SP := SP + 8 * "+4+"\n");
 
-        k = 0;
-        for (Identifier identifier : args) {
-            if (identifier.id.startsWith("p")) writer.addString(identifier.id+" := M[SP + 8 * "+(k+++"];\n"));
+        if (!currentScope.equals("global")){
+            int k = 0;
+            for (Identifier identifier : args) {
+                if (identifier.id.startsWith("p")) writer.addString(identifier.id+" := M[SP + 8 * "+(k+++"]\n"));
+            }
         }
 
         scopes.removeFirst();
@@ -610,12 +622,12 @@ public class IntermediateCodeGenerator {
         if (temp.equals("VNAME")) {
             temp = handleNames(id);
             writer.addString(place+" := "+temp);
-            writer.addString(";\n");
+            writer.addString("\n");
         }
         else {
             temp = handleConstants(id);
             writer.addString(place+" := "+temp);
-            writer.addString(";\n");
+            writer.addString("\n");
         }
 
     }
@@ -647,10 +659,10 @@ public class IntermediateCodeGenerator {
             id2 = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
             String place = newVar();
             handleTerms(id2, place);
-            writer.addString(temp+" := " + place+";\n");
+            writer.addString(temp+" := " + place+"\n");
         }
         else {
-            writer.addString("INPUT "+temp+";\n");
+            writer.addString("INPUT "+temp+"\n");
         }
    
     }
@@ -703,7 +715,7 @@ public class IntermediateCodeGenerator {
             temp = lines[9].replace("<ID>", "").replace("</ID>", "").trim();
             handleArgs(temp, place2);
 
-            writer.addString(place+" := "+place1+" "+op+" "+place2+";\n");
+            writer.addString(place+" := "+place1+" "+op+" "+place2+"\n");
 
         }
         else{
@@ -715,7 +727,7 @@ public class IntermediateCodeGenerator {
             temp = lines[7].replace("<ID>", "").replace("</ID>", "").trim();
             handleArgs(temp, place1);
 
-            writer.addString(place+" := "+op+" "+place1+";\n");
+            writer.addString(place+" := "+op+" "+place1+"\n");
         }
 
     }
