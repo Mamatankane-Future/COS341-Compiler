@@ -11,7 +11,7 @@ class BufferedFileWriter implements AutoCloseable {
     private String filename;
 
     public BufferedFileWriter(String filename) throws IOException {
-        this.filename = "out/" + filename + ".txt";
+        this.filename = filename + ".txt";
         this.stringBuilder = new StringBuilder();
         (new BufferedWriter(new FileWriter(this.filename))).close();
         this.writer = new BufferedWriter(new FileWriter(this.filename, true));
@@ -55,13 +55,12 @@ public class IntermediateCodeGenerator {
     private ScopeTable scopeTable;
     private ArrayList<String> scopes = new ArrayList<>();
 
-    public IntermediateCodeGenerator(String filename, String outputFilename) {
-        filename = "scopes/" + filename + ".xml";
-        xpath = new XPATH(filename);
+    public IntermediateCodeGenerator(String infile, String outfile) {
+        xpath = new XPATH("lib/scope.xml");
         try {
-            writer = new BufferedFileWriter(outputFilename);
+            writer = new BufferedFileWriter(outfile);
             scopeTable = new ScopeTable();
-            java.io.FileInputStream fileIn = new java.io.FileInputStream("typers/"+outputFilename+".ser");
+            java.io.FileInputStream fileIn = new java.io.FileInputStream(infile+".ser");
             java.io.ObjectInputStream in = new java.io.ObjectInputStream(fileIn);
             ScopeTable table = (ScopeTable) in.readObject();
             in.close();
@@ -192,17 +191,18 @@ public class IntermediateCodeGenerator {
 
         String label1 = newLabel();
         String label2 = newLabel();
+        String label3 = newLabel();
         handleConditions(temp, label1, label2);
 
         temp = lines[8].replace("<ID>", "").replace("</ID>", "").trim();
 
         writer.addString("LABEL "+label1+"\n");
         handleAlgos(temp);
-
+        writer.addString("GOTO "+label3+"\n");
         temp = lines[10].replace("<ID>", "").replace("</ID>", "").trim();
-
         writer.addString("LABEL "+label2+"\n");
         handleAlgos(temp);
+        writer.addString("LABEL "+label3+"\n");
 
     }
 

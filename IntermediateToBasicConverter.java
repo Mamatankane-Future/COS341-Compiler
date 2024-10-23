@@ -194,15 +194,15 @@ public class IntermediateToBasicConverter {
 
     }
 
-    public void convert() {
+    public void convert(String outfile, String infile) {
         IntermediateToBasicConverter converter = new IntermediateToBasicConverter();
         
 
-        String inputFilePath = "out/output.txt";
-        String outputFilePath = "out/output.bas";
+        String inputFilePath = infile + ".txt";
+        String outputFilePath = outfile + ".bas";
         
     
         converter.convertFile(inputFilePath, outputFilePath);
-        System.out.println("Conversion completed. Output saved in " + outputFilePath);
+        System.out.println("Program compiled successfully. Output saved in " + outputFilePath);
     }
 }

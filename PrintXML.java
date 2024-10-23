@@ -13,11 +13,10 @@ public class PrintXML{
         try {
             handleS();
 
-            PrintWriter writer = new PrintWriter("scopes/" + filename + "(renames).txt", "UTF-8");
+            PrintWriter writer = new PrintWriter(filename, "UTF-8");
             writer.println(sb.toString());
             writer.close();
-            
-            System.out.println("Printed XML to scopes/" + filename + "(renames).txt");
+        
         } catch (Exception e) {
             e.printStackTrace();
         }

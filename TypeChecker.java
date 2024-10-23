@@ -7,9 +7,9 @@ public class TypeChecker{
     ScopeTable table;
 
     public TypeChecker(String filename) {
-        xpath = new XPATH("scopes/"+filename+".xml");
+        xpath = new XPATH(filename+".xml");
         try {
-            java.io.FileInputStream fileIn = new java.io.FileInputStream("scopes/"+filename+".ser");
+            java.io.FileInputStream fileIn = new java.io.FileInputStream(filename+".ser");
             java.io.ObjectInputStream in = new java.io.ObjectInputStream(fileIn);
             ScopeTable table = (ScopeTable) in.readObject();
             in.close();
@@ -25,12 +25,11 @@ public class TypeChecker{
     public void analyse(String filename) {
         try {
             handleS(); 
-            java.io.FileOutputStream fileOut = new java.io.FileOutputStream("typers/"+filename+".ser");
+            java.io.FileOutputStream fileOut = new java.io.FileOutputStream(filename+".ser");
             java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(fileOut);
             out.writeObject(table);
             out.close();
             fileOut.close();
-            System.out.println("Type Checked saved in typers/"+filename+".ser");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,13 +37,13 @@ public class TypeChecker{
 
     public void printTable(String filename) {
         try {
-            java.io.FileInputStream fileIn = new java.io.FileInputStream("typers/"+filename+".ser");
+            java.io.FileInputStream fileIn = new java.io.FileInputStream(filename+".ser");
             java.io.ObjectInputStream in = new java.io.ObjectInputStream(fileIn);
             ScopeTable table = (ScopeTable) in.readObject();
             in.close();
             fileIn.close();
 
-            java.io.FileWriter fileWriter = new java.io.FileWriter("typers/"+filename+".txt");
+            java.io.FileWriter fileWriter = new java.io.FileWriter(filename+".txt");
             java.io.BufferedWriter writer = new java.io.BufferedWriter(fileWriter);
     
             for (String scope : table.table.keySet()) {

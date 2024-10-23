@@ -148,13 +148,11 @@ class XMLTree {
 
 public class Parser{
 
-    public void parse(String filename){
-        File file = new File(filename);
+    public void parse(String infile, String outfile){
+        File file = new File(infile);
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             XMLTree xmlTree = parse(br);
-            String [] parts = filename.split("/")[1].split("\\.");
-            writeToFile("parser/" + parts[0] + ".xml", xmlTree);
-            System.out.println("Parser output written to parser/" + parts[0] + ".xml");
+            writeToFile(outfile, xmlTree);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -162,7 +160,6 @@ public class Parser{
 
     public static void writeToFile(String fileName, XMLTree tree) throws IOException {
         Files.write(Paths.get(fileName), tree.toSyntaxTreeString(tree).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        System.out.println("XML written to " + fileName);
     }
 
     public XMLTree parse(BufferedReader br) throws IOException {
@@ -179,6 +176,7 @@ public class Parser{
 
         stack.push("0");
 
+        @SuppressWarnings("unused")
         String line = br.readLine();
         String id = null, type = null, word = null;
        
@@ -273,20 +271,21 @@ public class Parser{
 
 class DeserializeParser {
 
+    @SuppressWarnings("unchecked")
     public Map<String, String> parseInputFile() {
-        String filePath = "parse_table.ser";
         Map<String, String> parseMap = new HashMap<>();
+        InputStream inputStream = Main.class.getResourceAsStream("/parse_table.ser");
 
-        // Deserialize the map from the file
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            // Cast the deserialized object to a Map
+
+        if (inputStream == null) {
+            System.err.println("Unable to find parse_table.ser");
+            throw new RuntimeException("Unable to find parse_table.ser");
+        }
+
+
+        try (ObjectInputStream ois = new ObjectInputStream(inputStream)) {
+
             parseMap = (Map<String, String>) ois.readObject();
-
-            // Print the contents of the map
-            // System.out.println("Deserialized Map Contents:");
-            // for (Map.Entry<String, String> entry : parseMap.entrySet()) {
-            //     System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
-            // }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

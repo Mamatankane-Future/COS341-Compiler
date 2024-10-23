@@ -529,8 +529,7 @@ class TokenStream{
         sb.append("  </TOK>\n");
         sb.append("</TOKENSTREAM>");
         try {
-            Files.write(Paths.get("lexer/" + outfile + ".xml"), sb.toString().getBytes());
-            System.out.println("Lexer output written to lexer/" + outfile + ".xml");
+            Files.write(Paths.get(outfile), sb.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

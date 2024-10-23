@@ -241,15 +241,13 @@ public class ScopeAnalyser {
                     throw new RuntimeException("Function " + entry.getValue() + " not declared");
                 }
             }
-            java.io.FileOutputStream fileOut = new java.io.FileOutputStream("scopes/"+filename+".ser");
+            java.io.FileOutputStream fileOut = new java.io.FileOutputStream(filename+".ser");
             java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(fileOut);
             out.writeObject(table);
             out.close();
             fileOut.close();
 
-            System.out.println("Scopes saved in scopes/"+filename+".ser");
             changeNames(filename);
-            System.out.println("Names changed in scopes/"+filename+".xml");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -257,13 +255,13 @@ public class ScopeAnalyser {
 
     public void printTable(String filename) {
         try {
-            java.io.FileInputStream fileIn = new java.io.FileInputStream("scopes/"+filename+".ser");
+            java.io.FileInputStream fileIn = new java.io.FileInputStream(filename+".ser");
             java.io.ObjectInputStream in = new java.io.ObjectInputStream(fileIn);
             ScopeTable table = (ScopeTable) in.readObject();
             in.close();
             fileIn.close();
 
-            java.io.FileWriter fileWriter = new java.io.FileWriter("scopes/"+filename+".txt");
+            java.io.FileWriter fileWriter = new java.io.FileWriter(filename+".txt");
             java.io.BufferedWriter writer = new java.io.BufferedWriter(fileWriter);
     
             for (String scope : table.table.keySet()) {
@@ -304,7 +302,7 @@ public class ScopeAnalyser {
             xpath.update("//UNID[text()='" + name[0] + "']/../TERMINAL/TOKEN", newName);
         }  
         
-        xpath.save("scopes/"+filename+".xml");
+        xpath.save(filename+".xml");
         
 
     }

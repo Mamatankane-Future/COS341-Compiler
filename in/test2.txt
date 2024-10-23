@@ -1,6 +1,0 @@
-main
-    text V_name,
-    num V_age,
-
-    begin
-    end
