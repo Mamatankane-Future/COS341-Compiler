@@ -1,0 +1,38 @@
+main
+    num V_num1,
+    num V_num2,
+    num V_choice,
+    num V_result,
+
+    begin
+        print "One";
+        V_num1 <input;
+        print "Two";
+        V_num2 < input;
+        print "Operation";
+        V_choice <input;
+        if eq(V_choice, -1) then begin
+            V_result = add(V_num1, V_num2);
+        end
+        else begin
+            if eq(V_choice, -2) then begin
+                V_result = sub(V_num1, V_num2);
+            end
+            else begin
+                if eq(V_choice, -3) then begin
+                    V_result = div(V_num1, V_num2);
+                end
+                else begin
+                    if eq(V_choice, -4) then begin
+                        V_result = mul(V_num1, V_num2);
+                    end
+                    else begin
+                    end;
+                end;
+            end;
+        end;
+
+        print V_result;
+
+    end
+

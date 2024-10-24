@@ -569,7 +569,7 @@ public class TypeChecker{
         else {
             temp = handleConstants(id);
             String alphabeticPattern = "^\"[a-zA-Z]+\"$";
-            String numericPattern = "^[0-9]+(\\.[0-9]+)?$";
+            String numericPattern = "^-?[0-9]+(\\.[0-9]+)?$";
             if (temp.matches(alphabeticPattern)) return "t";
             if (temp.matches(numericPattern)) return "n";
         }
@@ -699,7 +699,7 @@ public class TypeChecker{
 
         String nums[] = {"add", "sub", "mul", "div"};
 
-        String cs[] = {"eq", "gt"};
+        String cs[] = {"eq", "grt"};
 
         if (Arrays.asList(bools).contains(binop)) {
             return "b";

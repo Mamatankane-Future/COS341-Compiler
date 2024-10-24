@@ -114,9 +114,8 @@ public class IntermediateToBasicConverter {
                 
             }
         }
-        else if (intermediateLine.matches("IF\\s*([a-zA-Z0-9]+)\\s*(=|>)\\s*([a-zA-Z0-9]+)\\s*THEN\\s*GOTO\\s*([a-zA-Z0-9]+)\\s*ELSE\\s*GOTO\\s*([a-zA-Z0-9]+)")) {
-            // Extract variables from the match
-            Matcher matcher = Pattern.compile("IF\\s*([a-zA-Z0-9]+)\\s*(=|>)\\s*([a-zA-Z0-9]+)\\s*THEN\\s*GOTO\\s*([a-zA-Z0-9]+)\\s*ELSE\\s*GOTO\\s*([a-zA-Z0-9]+)").matcher(intermediateLine);
+        else if (intermediateLine.matches("IF\\s*([-]?[a-zA-Z0-9]+)\\s*(=|>)\\s*([-]?[a-zA-Z0-9]+)\\s*THEN\\s*GOTO\\s*([a-zA-Z0-9]+)\\s*ELSE\\s*GOTO\\s*([a-zA-Z0-9]+)")) {
+            Matcher matcher = Pattern.compile("IF\\s*([-]?[a-zA-Z0-9]+)\\s*(=|>)\\s*([-]?[a-zA-Z0-9]+)\\s*THEN\\s*GOTO\\s*([a-zA-Z0-9]+)\\s*ELSE\\s*GOTO\\s*([a-zA-Z0-9]+)").matcher(intermediateLine);
             if (matcher.find()) {
                 String conditionVar = matcher.group(1);
                 String operator = matcher.group(2);
@@ -129,14 +128,14 @@ public class IntermediateToBasicConverter {
         }        
         else if (intermediateLine.matches("GOTO ([a-zA-Z0-9]+)")) {
             String[] parts = intermediateLine.split(" ");
-            if (!parts[1].startsWith("f")) basicCode = "GOTO "+parts[1];
-            else basicCode = "GOSUB "+parts[1];
+            if (!parts[1].startsWith("f")) basicCode = "GOTO "+parts[1]+" ";
+            else basicCode = "GOSUB "+parts[1]+" ";
         }
         else if (intermediateLine.matches("LABEL ([a-zA-Z0-9]+)")){
             basicCode = "REM "+intermediateLine;
             String[] parts = intermediateLine.split(" ");
 
-            lineNumbers.put(parts[1], String.valueOf(i.get()));
+            lineNumbers.put(" "+parts[1]+" ", " "+String.valueOf(i.get()) + " ");
 
             if (parts[1].startsWith("f")) {
                 basicCode = i.get()+" REM "+intermediateLine;
@@ -295,7 +294,6 @@ public class IntermediateToBasicConverter {
             String line;
             AtomicInteger i = new AtomicInteger(30);
 
-            // Second pass through the file
             writer.write("10 DIM M(7, 100)\n20 f = 0");
             writer.newLine();
             while ((line = reader.readLine()) != null) {
@@ -314,7 +312,7 @@ public class IntermediateToBasicConverter {
         }
 
         try {
-            // Read the contents of the output file
+
             File file = new File(outputFilePath);
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             StringBuilder contentBuilder = new StringBuilder();

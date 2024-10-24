@@ -7,7 +7,7 @@
 70 M(1, f + 1) = v10
 80 M(2, f + 1) = 0
 90 M(3, f + 1) = 0
-100 GOSUB 170
+100 GOSUB 170 
 110 REM LABEL L0
 120 T0 = M(0, f)
 130 LET v5 = T0
@@ -28,7 +28,7 @@
 280 REM LABEL L1
 290 M(0, f - 1) = 1
 300 REM END
-310 GOTO 620
+310 GOTO 620 
 320 REM LABEL L2
 330 LET T2 = p70
 340 LET T3 = 1
@@ -43,7 +43,7 @@
 430 M(1, f + 1) = v84
 440 M(2, f + 1) = 0
 450 M(3, f + 1) = 0
-460 GOSUB 170
+460 GOSUB 170 
 470 REM LABEL L4
 480 T4 = M(0, f)
 490 p70 = M(1, f)

@@ -1,1 +1,1 @@
-main num v5 , begin v5 = add ( 0.03 , 2 ) ; end num f38 ( p41 , p44 , p47 ) { text v55 , text v60 , text v65 , begin end } end 
+main num v5 , num v10 , begin print "Factorial" ; v10 input ; v5 = f67 ( v10 , 0 , 0 ) ; print v5 ; end num f67 ( p70 , p73 , p76 ) { num v84 , num v89 , num v94 , begin if eq ( p70 , 1 ) then begin return 1 ; end else begin v84 = sub ( p70 , 1 ) ; v89 = f67 ( v84 , 0 , 0 ) ; v94 = mul ( v89 , p70 ) ; return v94 ; end ; end } end 

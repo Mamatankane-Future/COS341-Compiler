@@ -1,23 +1,72 @@
 v5 := 0
-T1 := 0.03
-T2 := 2
-T0 := T1 + T2
+v10 := 0
+PRINT "Factorial";
+INPUT v10;
+SP := SP - 8 * 4;
+M[SP + 8] := v10;
+M[SP + 16] := 0;
+M[SP + 24] := 0;
+M[SP] := L0;
+GOTO f67;
+LABEL L0;
+T0 := M[SP + 8];
+SP := SP + 8 * 4;
 v5 := T0;
+PRINT v5;
 REM END
 STOP
-LABEL f38
+LABEL f67
 SP := SP - 80
 M[SP + 48] := R0
 M[SP + 56] := R1
 M[SP + 64] := R2
 M[SP + 72] := R3
-p41 := M[SP + 88]
-p44 := M[SP + 96]
-p47 := M[SP + 104]
+p70 := M[SP + 88]
+p73 := M[SP + 96]
+p76 := M[SP + 104]
 REM BEGIN
-v55 := ""
-v60 := ""
-v65 := ""
+v84 := 0
+v89 := 0
+v94 := 0
+IF p70 = 1 THEN GOTO L1 ELSE GOTO L2;
+LABEL L1
+M[SP + 88] := 1;
+REM END
+GOTO L3
+LABEL L2
+T2 := p70
+T3 := 1
+T1 := T2 - T3
+v84 := T1;
+M[SP + 8 * 0] := p70;
+M[SP + 8 * 1] := p73;
+M[SP + 8 * 2] := p76;
+M[SP + 8 * 3] := v84;
+M[SP + 8 * 4] := v89;
+M[SP + 8 * 5] := v94;
+SP := SP - 8 * 4;
+M[SP + 8] := v84;
+M[SP + 16] := 0;
+M[SP + 24] := 0;
+M[SP] := L4;
+GOTO f67;
+LABEL L4;
+T4 := M[SP + 8];
+SP := SP + 8 * 4;
+p70 := M[SP + 8 * 0];
+p73 := M[SP + 8 * 1];
+p76 := M[SP + 8 * 2];
+v84 := M[SP + 8 * 3];
+v89 := M[SP + 8 * 4];
+v94 := M[SP + 8 * 5];
+v89 := T4;
+T6 := v89
+T7 := p70
+T5 := T6 * T7
+v94 := T5;
+M[SP + 88] := v94;
+REM END
+LABEL L3
 REM END
 R0 := M[SP + 48]
 R1 := M[SP + 56]

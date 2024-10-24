@@ -62,7 +62,10 @@ main
         
         begin
             V_many = sqrt(4);
-            print V_many;
+            if and(eq(3, 3), grt(4, 1)) then begin
+                print "Dead";
+            end
+            else begin end;
             return V_arg2;
         end
     }
