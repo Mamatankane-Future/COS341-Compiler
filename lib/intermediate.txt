@@ -1,68 +1,189 @@
-v5 := 0
+v5 := ""
 v10 := 0
 v15 := 0
-v20 := 0
-PRINT "One";
-INPUT v5;
-PRINT "Two";
-INPUT v10;
-PRINT "Operation";
+PRINT 2025;
+PRINT v10;
 INPUT v15;
-IF v15 = -1 THEN GOTO L0 ELSE GOTO L1;
-LABEL L0
-T1 := v5
-T2 := v10
-T0 := T1 + T2
-v20 := T0;
+PRINT "Hello";
+T1 := 2024
+T2 := 2003
+T0 := T1 - T2
+v10 := T0;
+T3 := "Future"
+v5 := T3;
+PRINT v5;
+SP := SP - 8 * 4;
+M[SP + 8] := 11;
+M[SP + 16] := v10;
+M[SP + 24] := 2;
+M[SP] := L0;
+GOTO f146;
+LABEL L0;
+SP := SP + 8 * 4;
+M[SP + 8 * 0] := p378;
+M[SP + 8 * 1] := p381;
+M[SP + 8 * 2] := p384;
+M[SP + 8 * 3] := v392;
+M[SP + 8 * 4] := v397;
+M[SP + 8 * 5] := v402;
+SP := SP - 8 * 4;
+M[SP + 8] := 11;
+M[SP + 16] := v10;
+M[SP + 24] := 2;
+M[SP] := L1;
+GOTO f375;
+LABEL L1;
+T4 := M[SP + 8];
+SP := SP + 8 * 4;
+p378 := M[SP + 8 * 0];
+p381 := M[SP + 8 * 1];
+p384 := M[SP + 8 * 2];
+v392 := M[SP + 8 * 3];
+v397 := M[SP + 8 * 4];
+v402 := M[SP + 8 * 5];
+v10 := T4;
+PRINT v10;
 REM END
-GOTO L2
-LABEL L1
-IF v15 = -2 THEN GOTO L3 ELSE GOTO L4;
+STOP
+LABEL f146
+SP := SP - 80
+M[SP + 48] := R0
+M[SP + 56] := R1
+M[SP + 64] := R2
+M[SP + 72] := R3
+p149 := M[SP + 88]
+p152 := M[SP + 96]
+p155 := M[SP + 104]
+REM BEGIN
+v163 := 0
+v168 := 0
+v173 := 0
+T5 := p149
+v10 := T5;
+T6 := p152
+v163 := T6;
+T7 := p155
+v173 := T7;
+M[SP + 8 * 0] := p240;
+M[SP + 8 * 1] := p243;
+M[SP + 8 * 2] := p246;
+M[SP + 8 * 3] := v254;
+M[SP + 8 * 4] := v259;
+M[SP + 8 * 5] := v264;
+SP := SP - 8 * 4;
+M[SP + 8] := 11;
+M[SP + 16] := v168;
+M[SP + 24] := 2;
+M[SP] := L2;
+GOTO f237;
+LABEL L2;
+SP := SP + 8 * 4;
+p240 := M[SP + 8 * 0];
+p243 := M[SP + 8 * 1];
+p246 := M[SP + 8 * 2];
+v254 := M[SP + 8 * 3];
+v259 := M[SP + 8 * 4];
+v264 := M[SP + 8 * 5];
+REM END
+R0 := M[SP + 48]
+R1 := M[SP + 56]
+R2 := M[SP + 64]
+R3 := M[SP + 72]
+SP := SP + 80
+GOTO M[SP]
+REM END
+LABEL f237
+SP := SP - 80
+M[SP + 48] := R0
+M[SP + 56] := R1
+M[SP + 64] := R2
+M[SP + 72] := R3
+p240 := M[SP + 88]
+p243 := M[SP + 96]
+p246 := M[SP + 104]
+REM BEGIN
+v254 := ""
+v259 := 0
+v264 := 0
+IF ! p246 = 0 THEN GOTO L3 ELSE GOTO L4;
 LABEL L3
-T4 := v5
-T5 := v10
-T3 := T4 - T5
-v20 := T3;
+T9 := p246
+T10 := 1
+T8 := T9 - T10
+v259 := T8;
+PRINT v259;
+M[SP + 8 * 0] := p240;
+M[SP + 8 * 1] := p243;
+M[SP + 8 * 2] := p246;
+M[SP + 8 * 3] := v254;
+M[SP + 8 * 4] := v259;
+M[SP + 8 * 5] := v264;
+SP := SP - 8 * 4;
+M[SP + 8] := p240;
+M[SP + 16] := p243;
+M[SP + 24] := v259;
+M[SP] := L6;
+GOTO f237;
+LABEL L6;
+SP := SP + 8 * 4;
+p240 := M[SP + 8 * 0];
+p243 := M[SP + 8 * 1];
+p246 := M[SP + 8 * 2];
+v254 := M[SP + 8 * 3];
+v259 := M[SP + 8 * 4];
+v264 := M[SP + 8 * 5];
 REM END
 GOTO L5
 LABEL L4
-IF v15 = -3 THEN GOTO L6 ELSE GOTO L7;
-LABEL L6
-T7 := v5
-T8 := v10
-T6 := T7 / T8
-v20 := T6;
-REM END
-GOTO L8
-LABEL L7
-IF v15 = -4 THEN GOTO L9 ELSE GOTO L10;
-LABEL L9
-T10 := v5
-T11 := v10
-T9 := T10 * T11
-v20 := T9;
-REM END
-GOTO L11
-LABEL L10
-IF v15 = -5 THEN GOTO L12 ELSE GOTO L13;
-LABEL L12
-T13 := v5
-T12 := SQR T13
-v20 := T12;
-REM END
-GOTO L14
-LABEL L13
-REM END
-LABEL L14
-REM END
-LABEL L11
-REM END
-LABEL L8
+PRINT 2025;
 REM END
 LABEL L5
 REM END
-LABEL L2
-PRINT v20;
+R0 := M[SP + 48]
+R1 := M[SP + 56]
+R2 := M[SP + 64]
+R3 := M[SP + 72]
+SP := SP + 80
+GOTO M[SP]
+REM END
+REM END
+STOP
+REM END
+STOP
+LABEL f375
+SP := SP - 80
+M[SP + 48] := R0
+M[SP + 56] := R1
+M[SP + 64] := R2
+M[SP + 72] := R3
+p378 := M[SP + 88]
+p381 := M[SP + 96]
+p384 := M[SP + 104]
+REM BEGIN
+v392 := ""
+v397 := 0
+v402 := 0
+T12 := 4
+T11 := SQR T12
+v402 := T11;
+IF -3 = -3 && -2 > -10 THEN GOTO L7 ELSE GOTO L8;
+LABEL L7
+PRINT "Dead";
+REM END
+GOTO L9
+LABEL L8
+PRINT "Not";
+REM END
+LABEL L9
+M[SP + 88] := p381;
+REM END
+R0 := M[SP + 48]
+R1 := M[SP + 56]
+R2 := M[SP + 64]
+R3 := M[SP + 72]
+SP := SP + 80
+GOTO M[SP]
+REM END
 REM END
 STOP
 REM END

@@ -1,5 +1,31 @@
+Scope: global.F_print.F_print3
+Name: F_print3, Type: v, Value: null, ID: f237
+Name: V_arg1, Type: n, Value: null, ID: p240
+Name: V_arg2, Type: n, Value: null, ID: p243
+Name: V_arg3, Type: n, Value: null, ID: p246
+Name: V_loc1, Type: t, Value: "", ID: v254
+Name: V_loc2, Type: n, Value: 0, ID: v259
+Name: V_loc3, Type: n, Value: 0, ID: v264
+Scope: global.F_print
+Name: F_print, Type: v, Value: null, ID: f146
+Name: V_arg1, Type: n, Value: null, ID: p149
+Name: V_arg2, Type: n, Value: null, ID: p152
+Name: V_arg3, Type: n, Value: null, ID: p155
+Name: V_name, Type: n, Value: 0, ID: v163
+Name: V_age2, Type: n, Value: 0, ID: v168
+Name: V_many, Type: n, Value: 0, ID: v173
+Name: F_print3, Type: v, Value: null, ID: f237
+Scope: global.F_print3
+Name: F_print3, Type: n, Value: null, ID: f375
+Name: V_arg1, Type: n, Value: null, ID: p378
+Name: V_arg2, Type: n, Value: null, ID: p381
+Name: V_arg3, Type: n, Value: null, ID: p384
+Name: V_name2, Type: t, Value: "", ID: v392
+Name: V_age2, Type: n, Value: 0, ID: v397
+Name: V_many, Type: n, Value: 0, ID: v402
 Scope: global
-Name: V_num1, Type: n, Value: 0, ID: v5
-Name: V_num2, Type: n, Value: 0, ID: v10
-Name: V_choice, Type: n, Value: 0, ID: v15
-Name: V_result, Type: n, Value: 0, ID: v20
+Name: V_name, Type: t, Value: "", ID: v5
+Name: V_age, Type: n, Value: 0, ID: v10
+Name: V_time, Type: n, Value: 0, ID: v15
+Name: F_print, Type: v, Value: null, ID: f146
+Name: F_print3, Type: n, Value: null, ID: f375

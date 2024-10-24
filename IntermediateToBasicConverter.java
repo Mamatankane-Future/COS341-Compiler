@@ -125,7 +125,13 @@ public class IntermediateToBasicConverter {
                 
                 basicCode = "IF " + conditionVar + " " + operator + " " + value + " THEN GOTO " + thenLabel + " ELSE GOTO " + elseLabel + " FI";
             }
-        }        
+        }    
+        else if (intermediateLine.contains(" && ")){
+            basicCode = intermediateLine.replace(" && ", " AND ") + " FI";
+        }    
+        else if (intermediateLine.contains(" || ")){
+            basicCode = intermediateLine.replace(" || ", " OR ") + " FI";
+        }
         else if (intermediateLine.matches("GOTO ([a-zA-Z0-9]+)")) {
             String[] parts = intermediateLine.split(" ");
             if (!parts[1].startsWith("f")) basicCode = "GOTO "+parts[1]+" ";
