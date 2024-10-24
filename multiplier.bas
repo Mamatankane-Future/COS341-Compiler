@@ -1,0 +1,129 @@
+10 DIM M(7, 100)
+20 f = 0
+30 LET v5 = 0
+40 LET v10 = 0
+50 M(1, f + 1) = -100
+60 M(2, f + 1) = 0
+70 M(3, f + 1) = 0
+80 GOSUB 120 
+90 REM LABEL L0
+100 REM END
+110 END
+120 REM LABEL f41
+130 f = f + 1
+140 SP = SP - 80
+150 p44 = M(1, f)
+160 p47 = M(2, f)
+170 p50 = M(3, f)
+180 REM BEGIN
+190 LET v58 = 0
+200 LET v63 = 0
+210 LET v68 = 0
+220 IF p44 = -100 THEN GOTO 230 ELSE GOTO 640 FI
+230 REM LABEL L1
+240 PRINT "Multiplier"
+250 INPUT "Please enter number: " v5
+260 M(1, f) = p177
+270 M(2, f) = p180
+280 M(3, f) = p183
+290 M(4, f) = v191
+300 M(5, f) = v196
+310 M(6, f) = v201
+320 M(1, f + 1) = 0
+330 M(2, f + 1) = 0
+340 M(3, f + 1) = 0
+350 GOSUB 720 
+360 REM LABEL L4
+370 p177 = M(1, f)
+380 p180 = M(2, f)
+390 p183 = M(3, f)
+400 v191 = M(4, f)
+410 v196 = M(5, f)
+420 v201 = M(6, f)
+430 PRINT "Stop"
+440 INPUT "Please enter number: " v10
+450 M(1, f) = p44
+460 M(2, f) = p47
+470 M(3, f) = p50
+480 M(4, f) = v58
+490 M(5, f) = v63
+500 M(6, f) = v68
+510 M(1, f + 1) = v10
+520 M(2, f + 1) = 0
+530 M(3, f + 1) = 0
+540 GOSUB 120 
+550 REM LABEL L5
+560 p44 = M(1, f)
+570 p47 = M(2, f)
+580 p50 = M(3, f)
+590 v58 = M(4, f)
+600 v63 = M(5, f)
+610 v68 = M(6, f)
+620 REM END
+630 GOTO 660 
+640 REM LABEL L2
+650 REM END
+660 REM LABEL L3
+670 REM END
+680 SP = SP + 80
+690 f = f - 1
+700 RETURN
+710 REM END
+720 REM LABEL f174
+730 f = f + 1
+740 SP = SP - 80
+750 p177 = M(1, f)
+760 p180 = M(2, f)
+770 p183 = M(3, f)
+780 REM BEGIN
+790 LET v191 = 0
+800 LET v196 = 0
+810 LET v201 = 0
+820 IF NOT p177 > 10 THEN GOTO 830 ELSE GOTO 1170 FI
+830 REM LABEL L6
+840 PRINT v5
+850 PRINT "X"
+860 PRINT p177
+870 LET T1 = v5
+880 LET T2 = p177
+890 T0 = T1 * T2
+900 LET v191 = T0
+910 PRINT "Equals"
+920 PRINT v191
+930 PRINT "End"
+940 LET T4 = p177
+950 LET T5 = 1
+960 T3 = T4 + T5
+970 LET v191 = T3
+980 M(1, f) = p177
+990 M(2, f) = p180
+1000 M(3, f) = p183
+1010 M(4, f) = v191
+1020 M(5, f) = v196
+1030 M(6, f) = v201
+1040 M(1, f + 1) = v191
+1050 M(2, f + 1) = 0
+1060 M(3, f + 1) = 0
+1070 GOSUB 720 
+1080 REM LABEL L9
+1090 p177 = M(1, f)
+1100 p180 = M(2, f)
+1110 p183 = M(3, f)
+1120 v191 = M(4, f)
+1130 v196 = M(5, f)
+1140 v201 = M(6, f)
+1150 REM END
+1160 GOTO 1190 
+1170 REM LABEL L7
+1180 REM END
+1190 REM LABEL L8
+1200 REM END
+1210 SP = SP + 80
+1220 f = f - 1
+1230 RETURN
+1240 REM END
+1250 REM END
+1260 END
+1270 REM END
+1280 END
+1290 REM END

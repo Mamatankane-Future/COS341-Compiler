@@ -1,12 +1,5 @@
-Scope: global.F_factorial
-Name: F_factorial, Type: n, Value: null, ID: f67
-Name: V_arg1, Type: num, Value: null, ID: p70
-Name: V_arg2, Type: num, Value: null, ID: p73
-Name: V_arg3, Type: num, Value: null, ID: p76
-Name: V_loc1, Type: num, Value: 0, ID: v84
-Name: V_loc2, Type: num, Value: 0, ID: v89
-Name: V_loc3, Type: num, Value: 0, ID: v94
 Scope: global
-Name: V_result, Type: num, Value: 0, ID: v5
-Name: V_number, Type: num, Value: 0, ID: v10
-Name: F_factorial, Type: n, Value: null, ID: f67
+Name: V_num1, Type: num, Value: 0, ID: v5
+Name: V_num2, Type: num, Value: 0, ID: v10
+Name: V_choice, Type: num, Value: 0, ID: v15
+Name: V_result, Type: num, Value: 0, ID: v20

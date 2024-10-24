@@ -88,7 +88,7 @@ public class IntermediateToBasicConverter {
         else if (intermediateLine.matches("([a-zA-Z0-9]+)\\s*:=\\s*SQR\\s*([a-zA-Z0-9]+)")) {
             String[] parts = intermediateLine.split(" := ");
             String[] part1 = parts[1].split(" ");
-            basicCode = parts[0] +" = SQR(" +part1[1]+")";
+            basicCode = parts[0] +" = SQRT(" +part1[1]+")";
         }
         else if (intermediateLine.matches("([a-zA-Z0-9]+)\\s*:=\\s*NOT\\s*([a-zA-Z0-9]+)")){
             String[] parts = intermediateLine.split(" := ");

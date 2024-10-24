@@ -27,6 +27,10 @@ main
                         V_result = mul(V_num1, V_num2);
                     end
                     else begin
+                        if eq(V_choice, -5) then begin
+                            V_result = sqrt(V_num1);
+                        end
+                        else begin end;
                     end;
                 end;
             end;

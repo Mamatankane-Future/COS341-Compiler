@@ -4,7 +4,7 @@ main
 
     begin
         F_until(-100, 0, 0);
-    end;
+    end
 
     void F_until(V_arg1, V_arg2, V_arg3)
     {
@@ -16,13 +16,36 @@ main
             if eq(V_arg1, -100) then begin
                 print "Multiplier";
                 V_number <input;
-                F_multiplier(V_number, 0, 0);
+                F_multiplier(0, 0, 0);
                 print "Stop";
                 V_stop <input;
                 F_until(V_stop, 0, 0);
             end
             else begin end;
-        end;
+        end
     }
 
         void F_multiplier(V_arg1, V_arg2, V_arg3)
+        {
+            num V_loc1,
+            num V_loc2,
+            num V_loc3,
+
+            begin
+                if not(grt(V_arg1, 10)) then begin
+                    print V_number;
+                    print "X";
+                    print V_arg1;
+                    V_loc1 = mul(V_number, V_arg1);
+                    print "Equals";
+                    print V_loc1;
+                    print "End";
+                    V_loc1 = add(V_arg1, 1);
+                    F_multiplier(V_loc1, 0, 0);
+                end
+                else begin end;
+            end
+        }
+
+        end
+    end
